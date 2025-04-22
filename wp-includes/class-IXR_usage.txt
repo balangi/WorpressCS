@@ -1,0 +1,24 @@
+using System;
+using IXR;
+
+class Program
+{
+    static void Main()
+    {
+        // Initialize the IXR library
+        IXR.Initialize();
+
+        // Display information about the library
+        IXR.About();
+
+        // Example usage of IXR_Server
+        var server = new IXR_Server();
+        server.Serve("<methodCall><methodName>example.method</methodName></methodCall>");
+
+        // Example usage of IXR_Client
+        var client = new IXR_Client("http://example.com/xmlrpc");
+        client.QueryAsync("example.method", "param1", 123).Wait();
+
+        Console.WriteLine("IXR Library Usage Complete.");
+    }
+}

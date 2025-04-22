@@ -1,0 +1,42 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Snoopy.Core;
+using Snoopy.Core.Data;
+
+class Program
+{
+    static async Task Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddLogging(configure => configure.AddConsole())
+            .AddDbContext<AppDbContext>()
+            .AddScoped<Snoopy>()
+            .BuildServiceProvider();
+
+        var snoopy = serviceProvider.GetService<Snoopy>();
+
+        try
+        {
+            // Send a GET request
+            string response = await snoopy.FetchAsync("https://jsonplaceholder.typicode.com/posts/1");
+            Console.WriteLine(response);
+
+            // Send a POST request
+            var formData = new Dictionary<string, string>
+            {
+                { "title", "foo" },
+                { "body", "bar" },
+                { "userId", "1" }
+            };
+            string postResponse = await snoopy.SubmitAsync("https://jsonplaceholder.typicode.com/posts", formData);
+            Console.WriteLine(postResponse);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}

@@ -1,0 +1,29 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.Blocks;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var block = new WPBlock(dbContext)
+        {
+            Name = "core/paragraph",
+            ParsedBlock = new Dictionary<string, object>
+            {
+                { "content", "This is a test paragraph." }
+            }
+        };
+
+        block.Save();
+
+        var loadedBlock = WPBlock.Load(block.Id, dbContext);
+        Console.WriteLine(loadedBlock.Render());
+    }
+}

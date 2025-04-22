@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockParser;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+
+        // Create a block with inner blocks
+        var innerBlock = new BlockParserBlock(
+            "core/paragraph",
+            new Dictionary<string, object> { { "align", "center" } },
+            new List<BlockParserBlock>(),
+            "<p>Hello, World!</p>",
+            new List<string> { "<p>", "Hello, World!", "</p>" }
+        );
+
+        var outerBlock = new BlockParserBlock(
+            "core/columns",
+            new Dictionary<string, object> { { "columns", 2 } },
+            new List<BlockParserBlock> { innerBlock },
+            "<div class=\"wp-block-columns\">...</div>",
+            new List<string> { "<div class=\"wp-block-columns\">", null, "</div>" }
+        );
+
+        // Save the block to the database
+        outerBlock.Save(dbContext);
+
+        // Load the block from the database
+        var loadedBlock = BlockParserBlock.Load(outerBlock.Id, dbContext);
+
+        Console.WriteLine($"Loaded Block: {loadedBlock.BlockName}");
+        Console.WriteLine($"Inner HTML: {loadedBlock.InnerHtml}");
+        foreach (var innerBlockItem in loadedBlock.InnerBlocks)
+        {
+            Console.WriteLine($"Inner Block: {innerBlockItem.BlockName}");
+        }
+    }
+}

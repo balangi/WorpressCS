@@ -1,0 +1,21 @@
+using System;
+using System.Collections.Generic;
+using IXR;
+
+class Program
+{
+    static void Main()
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "name", "John Doe" },
+            { "age", 30 },
+            { "isStudent", false },
+            { "grades", new List<object> { 90, 85, 88 } }
+        };
+
+        var value = new IXR_Value(data);
+
+        Console.WriteLine(value.GetXml());
+    }
+}

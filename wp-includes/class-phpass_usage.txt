@@ -1,0 +1,19 @@
+using System;
+using Phpass;
+
+class Program
+{
+    static void Main()
+    {
+        var hasher = new PasswordHash(8, true);
+
+        // Hash a password
+        string password = "MySecurePassword123!";
+        string hashedPassword = hasher.HashPassword(password);
+        Console.WriteLine($"Hashed Password: {hashedPassword}");
+
+        // Verify a password
+        bool isValid = hasher.CheckPassword(password, hashedPassword);
+        Console.WriteLine($"Is Password Valid: {isValid}");
+    }
+}

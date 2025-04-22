@@ -1,0 +1,20 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.Toolbar;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var adminBar = new WPAdminBar(dbContext);
+
+        // Initialize and render the admin bar
+        adminBar.Initialize();
+    }
+}

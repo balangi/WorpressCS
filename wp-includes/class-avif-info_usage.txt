@@ -1,0 +1,10 @@
+public static AvifFeatures GetAvifInfo(string filePath)
+{
+    using var stream = File.OpenRead(filePath);
+    using var parser = new AvifParser(stream);
+    
+    if (!parser.Parse())
+        throw new InvalidDataException("Invalid AVIF file");
+    
+    return parser.Features;
+}

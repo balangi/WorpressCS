@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.Taxonomy;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var walker = new WalkerCategory(dbContext);
+
+        var categories = dbContext.Categories
+            .Include(c => c.Children)
+            .ToList();
+
+        var output = new StringBuilder();
+        foreach (var category in categories)
+        {
+            walker.StartElement(output, category, 0, new Dictionary<string, object>
+            {
+                { "style", "list" },
+                { "show_count", true }
+            });
+        }
+
+        Console.WriteLine(output.ToString());
+    }
+}

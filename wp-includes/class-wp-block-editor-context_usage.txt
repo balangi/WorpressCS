@@ -1,0 +1,34 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockEditor;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+
+        // Create a new block editor context
+        var settings = new Dictionary<string, object>
+        {
+            { "name", "core/edit-widgets" },
+            { "post", new Post { Title = "Sample Post", Content = "This is a sample post." } }
+        };
+
+        var editorContext = new BlockEditorContextManager(dbContext, settings);
+        editorContext.Save();
+
+        Console.WriteLine($"Block Editor Name: {editorContext.Name}");
+        Console.WriteLine($"Post Title: {editorContext.Post?.Title}");
+
+        // Load a block editor context
+        var loadedContext = BlockEditorContextManager.Load(1, dbContext);
+        Console.WriteLine($"Loaded Context Name: {loadedContext.Name}");
+    }
+}

@@ -1,0 +1,37 @@
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Requests.Core;
+using Requests.Core.Data;
+
+class Program
+{
+    static async Task Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddLogging(configure => configure.AddConsole())
+            .AddDbContext<AppDbContext>()
+            .AddScoped<Requests>()
+            .BuildServiceProvider();
+
+        var requests = serviceProvider.GetService<Requests>();
+
+        try
+        {
+            // Send a GET request
+            string response = await requests.GetAsync("https://jsonplaceholder.typicode.com/posts/1");
+            Console.WriteLine(response);
+
+            // Send a POST request
+            var content = new StringContent("{\"title\":\"foo\",\"body\":\"bar\",\"userId\":1}", System.Text.Encoding.UTF8, "application/json");
+            string postResponse = await requests.PostAsync("https://jsonplaceholder.typicode.com/posts", content);
+            Console.WriteLine(postResponse);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}

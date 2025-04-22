@@ -1,0 +1,31 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.Ajax;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var ajaxResponse = new WPAjaxResponse(dbContext);
+
+        var args = new Dictionary<string, object>
+        {
+            { "what", "object" },
+            { "action", "update_post" },
+            { "id", 1 },
+            { "position", "bottom" },
+            { "data", "Post updated successfully." },
+            { "supplemental", new Dictionary<string, string> { { "status", "success" } } }
+        };
+
+        ajaxResponse.Add(args);
+        ajaxResponse.Send();
+    }
+}

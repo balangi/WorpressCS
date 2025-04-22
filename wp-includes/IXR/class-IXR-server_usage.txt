@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+using System.Web;
+using IXR;
+
+class Program
+{
+    static void Main()
+    {
+        var callbacks = new Dictionary<string, Delegate>
+        {
+            { "example.method", new Func<object[], object>(ExampleMethod) }
+        };
+
+        var server = new IXR_Server(callbacks);
+
+        // Simulate serving a request
+        var xmlRequest = @"
+        <methodCall>
+            <methodName>example.method</methodName>
+            <params>
+                <param><value><string>Hello, World!</string></value></param>
+            </params>
+        </methodCall>";
+
+        HttpContext.Current = new HttpContext(
+            new HttpRequest("", "http://localhost", ""),
+            new HttpResponse(new StringWriter())
+        );
+
+        server.Serve(xmlRequest);
+
+        Console.WriteLine(HttpContext.Current.Response.Output.ToString());
+    }
+
+    static object ExampleMethod(object[] args)
+    {
+        return $"Received: {args[0]}";
+    }
+}

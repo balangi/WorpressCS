@@ -1,0 +1,19 @@
+using System;
+using PHPMailer.PHPMailer;
+
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            // Simulate an error
+            throw new Exception("An error occurred while sending the email.");
+        }
+        catch (Exception ex)
+        {
+            // Display the formatted error message
+            Console.WriteLine(ex.ErrorMessage());
+        }
+    }
+}

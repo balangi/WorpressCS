@@ -1,0 +1,44 @@
+using System;
+using System.Threading.Tasks;
+using PHPMailer.Core.SMTP;
+using PHPMailer.Core.Data;
+
+class Program
+{
+    static async Task Main()
+    {
+        var dbContext = new AppDbContext();
+        var smtp = new SMTP(dbContext);
+
+        try
+        {
+            // Connect to the SMTP server
+            await smtp.ConnectAsync("smtp.example.com", 587);
+
+            // Send EHLO command
+            await smtp.SendCommandAsync("EHLO example.com", 250);
+
+            // Send MAIL FROM command
+            await smtp.SendCommandAsync("MAIL FROM:<sender@example.com>", 250);
+
+            // Send RCPT TO command
+            await smtp.SendCommandAsync("RCPT TO:<recipient@example.com>", 250);
+
+            // Send DATA command
+            await smtp.SendCommandAsync("DATA", 354);
+
+            // Send email body
+            await smtp.SendCommandAsync("Subject: Test Email\r\n\r\nHello, World!\r\n.", 250);
+
+            Console.WriteLine("Email sent successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            smtp.Close();
+        }
+    }
+}

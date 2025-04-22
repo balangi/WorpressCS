@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.Pages;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var walker = new WalkerPage(dbContext);
+
+        var pages = dbContext.Pages
+            .Include(p => p.Children)
+            .ToList();
+
+        var output = new StringBuilder();
+        foreach (var page in pages)
+        {
+            walker.StartElement(output, page, 0, new Dictionary<string, object>
+            {
+                { "show_date", true },
+                { "show_date_type", "modified" }
+            });
+        }
+
+        Console.WriteLine(output.ToString());
+    }
+}

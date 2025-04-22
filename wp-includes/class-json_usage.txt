@@ -1,0 +1,37 @@
+using System;
+using Services;
+
+class Program
+{
+    static void Main()
+    {
+        // Create an instance of JsonService
+        var jsonService = new JsonService();
+
+        // Example object to encode
+        var data = new
+        {
+            Name = "John Doe",
+            Age = 30,
+            IsActive = true,
+            Skills = new List<string> { "C#", "ASP.NET", "EF Core" }
+        };
+
+        // Encode the object to JSON
+        string jsonString = jsonService.Encode(data);
+        Console.WriteLine("Encoded JSON:");
+        Console.WriteLine(jsonString);
+
+        // Decode the JSON back to an object
+        var decodedData = jsonService.Decode<dynamic>(jsonString);
+        Console.WriteLine("\nDecoded Data:");
+        Console.WriteLine($"Name: {decodedData.GetProperty("Name").GetString()}");
+        Console.WriteLine($"Age: {decodedData.GetProperty("Age").GetInt32()}");
+        Console.WriteLine($"IsActive: {decodedData.GetProperty("IsActive").GetBoolean()}");
+        Console.WriteLine("Skills:");
+        foreach (var skill in decodedData.GetProperty("Skills").EnumerateArray())
+        {
+            Console.WriteLine($"- {skill.GetString()}");
+        }
+    }
+}

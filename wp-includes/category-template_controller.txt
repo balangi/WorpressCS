@@ -1,0 +1,66 @@
+[ApiController]
+[Route("api/categories")]
+public class CategoriesTemplateController : ControllerBase
+{
+    private readonly CategoryTemplateService _categoryTemplateService;
+
+    public CategoriesTemplateController(CategoryTemplateService categoryTemplateService)
+    {
+        _categoryTemplateService = categoryTemplateService;
+    }
+
+    [HttpGet("link/{categoryId}")]
+    public IActionResult GetCategoryLink(int categoryId)
+    {
+        return Ok(_categoryTemplateService.GetCategoryLink(categoryId));
+    }
+
+    [HttpGet("parents/{categoryId}")]
+    public IActionResult GetCategoryParents(
+        int categoryId, 
+        [FromQuery] bool link = false, 
+        [FromQuery] string separator = "/", 
+        [FromQuery] bool nicename = false)
+    {
+        return Ok(_categoryTemplateService.GetCategoryParents(categoryId, link, separator, nicename));
+    }
+
+    [HttpGet("post/{postId}")]
+    public IActionResult GetPostCategories(int postId)
+    {
+        return Ok(_categoryTemplateService.GetPostCategories(postId));
+    }
+
+    [HttpGet("name/{categoryId}")]
+    public IActionResult GetCategoryName(int categoryId)
+    {
+        return Ok(_categoryTemplateService.GetCategoryNameById(categoryId));
+    }
+
+    [HttpGet("list/{postId}")]
+    public IActionResult GetCategoryList(
+        int postId, 
+        [FromQuery] string separator = "", 
+        [FromQuery] string parents = "")
+    {
+        return Ok(_categoryTemplateService.GetCategoryList(postId, separator, parents));
+    }
+
+    [HttpGet("check/{postId}/{categoryId}")]
+    public IActionResult IsPostInCategory(int postId, int categoryId)
+    {
+        return Ok(_categoryTemplateService.IsPostInCategory(postId, categoryId));
+    }
+
+    [HttpGet("description/{categoryId}")]
+    public IActionResult GetCategoryDescription(int categoryId)
+    {
+        return Ok(_categoryTemplateService.GetCategoryDescription(categoryId));
+    }
+
+    [HttpPost("dropdown")]
+    public IActionResult GetCategoriesDropdown([FromBody] CategoryDropdownOptions options)
+    {
+        return Ok(_categoryTemplateService.GetCategoriesDropdown(options));
+    }
+}

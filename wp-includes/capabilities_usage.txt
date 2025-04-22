@@ -1,0 +1,7 @@
+var context = new ApplicationDbContext();
+var capabilityService = new CapabilityService(context);
+
+// Check if the current user can delete a post
+bool canDeletePost = capabilityService.CurrentUserCan("delete_post", 123);
+
+Console.WriteLine(canDeletePost ? "User can delete the post." : "User cannot delete the post.");

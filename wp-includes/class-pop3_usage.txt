@@ -1,0 +1,50 @@
+using System;
+using System.Threading.Tasks;
+using POP3.Core;
+using POP3.Core.Data;
+
+class Program
+{
+    static async Task Main()
+    {
+        var dbContext = new AppDbContext();
+        var pop3 = new POP3(dbContext);
+
+        try
+        {
+            // Connect to the POP3 server
+            await pop3.ConnectAsync("pop.example.com", 110);
+
+            // Log in to the server
+            bool isLoggedIn = await pop3.LoginAsync("username", "password");
+            if (!isLoggedIn)
+            {
+                Console.WriteLine("Login failed.");
+                return;
+            }
+
+            // List messages
+            var messages = await pop3.ListMessagesAsync();
+            foreach (var msg in messages)
+            {
+                Console.WriteLine($"Message {msg.Key}: {msg.Value} bytes");
+            }
+
+            // Retrieve a message
+            string messageContent = await pop3.GetMessageAsync(1);
+            Console.WriteLine(messageContent);
+
+            // Delete a message
+            bool isDeleted = await pop3.DeleteMessageAsync(1);
+            Console.WriteLine(isDeleted ? "Message deleted successfully." : "Failed to delete message.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            pop3.Close();
+        }
+    }
+}

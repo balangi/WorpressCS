@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.Blocks;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+
+        // Create a list of blocks
+        var blocks = new List<Block>
+        {
+            new Block { Name = "core/paragraph", Attributes = new Dictionary<string, object> { { "content", "Hello World!" } } },
+            new Block { Name = "core/heading", Attributes = new Dictionary<string, object> { { "level", 2 }, { "content", "Welcome" } } }
+        };
+
+        var blockList = new BlockList(blocks, new Dictionary<string, object>(), dbContext);
+
+        // Iterate through the blocks
+        foreach (var block in blockList)
+        {
+            Console.WriteLine($"Block Name: {block.Name}");
+            foreach (var attribute in block.Attributes)
+            {
+                Console.WriteLine($"  {attribute.Key}: {attribute.Value}");
+            }
+        }
+
+        // Access a block by index
+        var paragraphBlock = blockList.OffsetGet(0);
+        Console.WriteLine($"First Block: {paragraphBlock.Name}");
+
+        // Add a new block
+        blockList.Add(new Block { Name = "core/image", Attributes = new Dictionary<string, object> { { "url", "https://example.com/image.jpg" } } });
+
+        // Count the blocks
+        Console.WriteLine($"Total Blocks: {blockList.Count}");
+    }
+}

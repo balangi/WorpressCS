@@ -1,0 +1,51 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockMetadata;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+
+        // Register a collection
+        var path = @"C:\wp-content\plugins\my-plugin\blocks";
+        var manifest = @"C:\wp-content\plugins\my-plugin\blocks\manifest.php";
+
+        BlockMetadataRegistry.RegisterCollection(path, manifest, dbContext);
+
+        // Get metadata for a block
+        var blockPath = @"C:\wp-content\plugins\my-plugin\blocks\example-block\block.json";
+        var metadata = BlockMetadataRegistry.GetMetadata(blockPath);
+
+        if (metadata != null)
+        {
+            Console.WriteLine("Block Metadata:");
+            foreach (var kvp in metadata)
+            {
+                Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("No metadata found for the specified block.");
+        }
+
+        // Check if metadata exists
+        var hasMetadata = BlockMetadataRegistry.HasMetadata(blockPath);
+        Console.WriteLine($"Has Metadata: {hasMetadata}");
+
+        // Get all metadata files in the collection
+        var metadataFiles = BlockMetadataRegistry.GetCollectionBlockMetadataFiles(path);
+        Console.WriteLine("Metadata Files:");
+        foreach (var file in metadataFiles)
+        {
+            Console.WriteLine(file);
+        }
+    }
+}

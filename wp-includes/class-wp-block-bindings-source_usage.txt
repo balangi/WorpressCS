@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockBindings;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+
+        // Define a sample callback
+        Func<Dictionary<string, object>, object, string, object> getValueCallback = (sourceArgs, blockInstance, attributeName) =>
+        {
+            return $"Value for {attributeName} with args {string.Join(", ", sourceArgs.Select(kvp => $"{kvp.Key}: {kvp.Value}"))}";
+        };
+
+        var sourceProperties = new Dictionary<string, object>
+        {
+            { "label", "Custom Source" },
+            { "get_value_callback", getValueCallback },
+            { "uses_context", new List<string> { "context1", "context2" } }
+        };
+
+        var source = new BlockBindingsSource("my-plugin/my-custom-source", sourceProperties);
+
+        var sourceArgs = new Dictionary<string, object>
+        {
+            { "key", "foo" }
+        };
+
+        var value = source.GetValue(sourceArgs, new { BlockId = 1 }, "title");
+        Console.WriteLine($"Computed Value: {value}");
+    }
+}

@@ -1,0 +1,34 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockParser;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var parser = new BlockParser(dbContext);
+
+        var document = @"
+            Pre-text
+            <!-- wp:paragraph -->
+            This is inside a block!
+            <!-- /wp:paragraph -->
+            Post-text
+        ";
+
+        parser.Parse(document);
+
+        foreach (var block in parser.Output)
+        {
+            Console.WriteLine($"Block Name: {block.Name}");
+            Console.WriteLine($"Inner HTML: {block.InnerHtml}");
+            Console.WriteLine($"Attributes: {string.Join(", ", block.Attributes)}");
+        }
+    }
+}

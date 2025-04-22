@@ -1,0 +1,33 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.Environment;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var wp = new WP(dbContext);
+
+        // Add or update query variables
+        wp.AddOrUpdateQueryVariable("page", "home");
+        wp.AddOrUpdateQueryVariable("action", "view");
+
+        // Process query variables
+        wp.ProcessQueryVariables();
+
+        // Remove a query variable
+        wp.RemoveQueryVariable("action");
+
+        // Output remaining query variables
+        foreach (var queryVar in wp.QueryVars)
+        {
+            Console.WriteLine($"{queryVar.Key}: {queryVar.Value}");
+        }
+    }
+}
