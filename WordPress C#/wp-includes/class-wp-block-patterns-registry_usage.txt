@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockPatterns;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var registry = BlockPatternsRegistry.GetInstance();
+
+        // Register a new block pattern
+        var patternProperties = new Dictionary<string, object>
+        {
+            { "title", "Two Columns" },
+            { "description", "A two-column layout." },
+            { "content", "<div class=\"two-columns\">...</div>" },
+            { "keywords", new List<string> { "columns", "layout" } },
+            { "blockTypes", new List<string> { "core/columns" } },
+            { "postTypes", new List<string> { "post", "page" } },
+            { "templateTypes", new List<string> { "index", "single" } }
+        };
+
+        registry.Register("core/two-columns", patternProperties, dbContext);
+
+        // Retrieve all registered patterns
+        var allPatterns = registry.GetAllRegistered();
+        Console.WriteLine("All Registered Patterns:");
+        foreach (var pattern in allPatterns)
+        {
+            Console.WriteLine($"Name: {pattern.Name}, Title: {pattern.Title}");
+        }
+
+        // Unregister a pattern
+        registry.Unregister("core/two-columns", dbContext);
+
+        // Check if a pattern is registered
+        var isRegistered = registry.IsRegistered("core/two-columns");
+        Console.WriteLine($"Is 'core/two-columns' registered? {isRegistered}");
+    }
+}

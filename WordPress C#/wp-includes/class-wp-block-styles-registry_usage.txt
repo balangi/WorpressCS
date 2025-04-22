@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockStyles;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var registry = BlockStylesRegistry.GetInstance();
+
+        // Register a new block style
+        var styleProperties = new Dictionary<string, object>
+        {
+            { "name", "bold-text" },
+            { "label", "Bold Text" },
+            { "inline_style", ".bold-text { font-weight: bold; }" },
+            { "is_default", true }
+        };
+
+        registry.Register("core/paragraph", styleProperties, dbContext);
+
+        // Retrieve all registered styles for a block
+        var styles = registry.GetRegisteredStylesForBlock("core/paragraph");
+        Console.WriteLine("Registered Styles for 'core/paragraph':");
+        foreach (var style in styles)
+        {
+            Console.WriteLine($"Name: {style.StyleName}, Label: {style.Label}");
+        }
+
+        // Unregister a style
+        registry.Unregister("core/paragraph", "bold-text", dbContext);
+
+        // Check if a style is registered
+        var isRegistered = registry.IsRegistered("core/paragraph", "bold-text");
+        Console.WriteLine($"Is 'bold-text' registered? {isRegistered}");
+    }
+}

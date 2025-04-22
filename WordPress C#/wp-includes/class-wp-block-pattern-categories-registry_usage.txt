@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockPatterns;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var registry = BlockPatternCategoriesRegistry.GetInstance();
+
+        // Register a new pattern category
+        var categoryProperties = new Dictionary<string, object>
+        {
+            { "label", "Text Patterns" }
+        };
+
+        registry.Register("core/text-patterns", categoryProperties, dbContext);
+
+        // Retrieve all registered categories
+        var allCategories = registry.GetAllRegistered();
+        Console.WriteLine("All Registered Categories:");
+        foreach (var category in allCategories)
+        {
+            Console.WriteLine($"Name: {category.Name}, Label: {category.Label}");
+        }
+
+        // Unregister a category
+        registry.Unregister("core/text-patterns", dbContext);
+
+        // Check if a category is registered
+        var isRegistered = registry.IsRegistered("core/text-patterns");
+        Console.WriteLine($"Is 'core/text-patterns' registered? {isRegistered}");
+    }
+}

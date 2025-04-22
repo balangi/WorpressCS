@@ -1,0 +1,49 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockParser;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+
+        // Create a block
+        var block = new BlockParserBlock(
+            "core/paragraph",
+            new System.Collections.Generic.Dictionary<string, object>
+            {
+                { "align", "center" }
+            },
+            new System.Collections.Generic.List<BlockParserBlock>(),
+            "<p>Hello, World!</p>",
+            new System.Collections.Generic.List<string> { "<p>", "Hello, World!", "</p>" }
+        );
+
+        // Create a frame
+        var frame = new BlockParserFrame(
+            block,
+            tokenStart: 0,
+            tokenLength: 10,
+            prevOffset: 20,
+            leadingHtmlStart: 5
+        );
+
+        // Save the frame to the database
+        frame.Save(dbContext);
+
+        // Load the frame from the database
+        var loadedFrame = BlockParserFrame.Load(1, dbContext);
+
+        Console.WriteLine($"Block Name: {loadedFrame.Block.BlockName}");
+        Console.WriteLine($"Token Start: {loadedFrame.TokenStart}");
+        Console.WriteLine($"Token Length: {loadedFrame.TokenLength}");
+        Console.WriteLine($"Prev Offset: {loadedFrame.PrevOffset}");
+        Console.WriteLine($"Leading HTML Start: {loadedFrame.LeadingHtmlStart}");
+    }
+}
