@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockTypes;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var blockTypeManager = new BlockTypeManager();
+
+        // Register a new block type
+        var blockArgs = new Dictionary<string, object>
+        {
+            { "title", "Example Block" },
+            { "category", "widgets" },
+            { "description", "An example block." },
+            { "icon", "smiley" },
+            { "attributes", new Dictionary<string, object>
+                {
+                    { "exampleAttribute", new { type = "string" } }
+                }
+            },
+            { "uses_context", new List<string> { "postId", "postType" } },
+            { "provides_context", new List<string> { "exampleContext" } },
+            { "editor_script_handles", new List<string> { "example-editor-script" } },
+            { "script_handles", new List<string> { "example-script" } },
+            { "view_script_handles", new List<string> { "example-view-script" } },
+            { "editor_style_handles", new List<string> { "example-editor-style" } },
+            { "style_handles", new List<string> { "example-style" } },
+            { "view_style_handles", new List<string> { "example-view-style" } }
+        };
+
+        var blockType = blockTypeManager.Register("core/example-block", blockArgs, dbContext);
+
+        Console.WriteLine($"Registered Block Type: {blockType.Name}");
+
+        // Retrieve all registered block types
+        var allBlockTypes = blockTypeManager.GetAllRegistered(dbContext);
+        Console.WriteLine("All $Serializer.B9registered_block {0 obj
+ {syntax array {
+ _ @"";
+//5 {
+ {
+_name { string title; {
+Name="Block string
+
+_log {
+ {
+ {
+ { _Ensure serialized_text $_set_name="USE string>()
+ new[] => string.IsNullOrWhiteSpace {
+.SetDefault_argument { 
+ string { " => string { @"Property => WPstring{ {string { @ PropertyInfo { "string? string.Register($ {
+_id="WP.string>();
+: string::Core: string string: string: string: {
+: string: string: void: string: string => string: string: string: string: string: string: string = " {
+
+: string: string: string: string: ' { string: string { = "3 string: string): string: string: string: string: string: string: string: string:Retrieve**: string: string: string: '');
+
+: string: void: string: string: string>();: string: string: string: string: string: string: string: List<string: string: string: string => {
+: string: void_return: string: string: string: */: string { public partial void: string { " = " => using System: string: string:Block: string= string: string: string: string:List):     { void: string: string: string => *5:() => string: string: string: string: IDictionary: string: string犯: string: string: string: string: string: string: string: string: string => Block { ": string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string:Instance { string: string: string: string>public: string: string: string: string: string: string: string: string: string:vector {
+: string: string: string: string: string: string: string[]: string: string: string: string => string: string: string: void Register$ {
+: string: string: string: string: string: string {: string: string>Parameters} _8void => string: string:Dictionary {
+ //!0 string: string: string: string: string: string>string: string> string: string: string => string: string { {string: string: string: string: string: string: string:Dictionary: string: string> void BLOCKname: string: string: string: string: string: string: string:List<>
+
+ string: item: string: void: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: void: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string> string: string: string: string > string: string: string: string: string: void: string: string: string Registered: string: string => string: string: string: string:Dictionarylate string: string: string: string: string: string: string = null: string: string: string: string: string: string: string: string: string: string: string: string: string: string:Dictionary $: string: string: string: string: string: string: string: voidع string: string: {
+: string: string: string: string => string: string: string: string: string: string {string: string: string: string: string: string: string: string: string: string: string: array string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string: string:

@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockSupports;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var blockSupports = BlockSupports.GetInstance();
+
+        // Initialize block supports
+        BlockSupports.Init(dbContext);
+
+        // Register a block support
+        var supportConfig = new Dictionary<string, object>
+        {
+            { "apply", (Func<Dictionary<string, object>, Dictionary<string, object>, Dictionary<string, string>>)((blockType, attrs) =>
+                new Dictionary<string, string> { { "class", "custom-class" } })
+            }
+        };
+
+        blockSupports.Register("custom-support", supportConfig, dbContext);
+
+        // Set the current block to render
+        BlockSupports.BlockToRender = new Dictionary<string, object>
+        {
+            { "blockName", "core/paragraph" },
+            { "attrs", new Dictionary<string, object> { { "align", "center" } } }
+        };
+
+        // Apply block supports
+        var attributes = blockSupports.ApplyBlockSupports(dbContext);
+
+        Console.WriteLine("Applied Attributes:");
+        foreach (var attribute in attributes)
+        {
+            Console.WriteLine($"{attribute.Key}: {attribute.Value}");
+        }
+    }
+}

@@ -1,0 +1,45 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockTemplates;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var templateManager = new BlockTemplateManager
+        {
+            Type = "wp_template",
+            Theme = "my-theme",
+            Slug = "home",
+            Title = "Home Template",
+            Content = "<div>Home Page Content</div>",
+            Description = "Template for the home page",
+            Source = "custom",
+            Origin = "theme",
+            WpId = 1,
+            Status = "publish",
+            HasThemeFile = false,
+            IsCustom = true,
+            Author = 1,
+            Plugin = "my-plugin",
+            PostTypes = new List<string> { "page", "post" },
+            Area = "content",
+            Modified = DateTime.UtcNow
+        };
+
+        // Save the template to the database
+        templateManager.Save(dbContext);
+
+        // Load the template from the database
+        var loadedTemplate = BlockTemplateManager.Load(1, dbContext);
+
+        Console.WriteLine($"Template Title: {loadedTemplate.Title}");
+        Console.WriteLine($"Template Content: {loadedTemplate.Content}");
+    }
+}

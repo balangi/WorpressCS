@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockTemplates;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var registry = BlockTemplatesRegistry.GetInstance();
+
+        // Register a new template
+        var templateArgs = new Dictionary<string, object>
+        {
+            { "content", "<div>Custom Template Content</div>" },
+            { "title", "Custom Template" },
+            { "description", "A custom block template." },
+            { "post_types", new List<string> { "page", "post" } }
+        };
+
+        var template = registry.Register("my-plugin//custom-template", templateArgs, dbContext);
+
+        Console.WriteLine($"Registered Template: {template.Name}");
+
+        // Retrieve all registered templates
+        var allTemplates = registry.GetAllRegistered();
+        Console.WriteLine("All Registered Templates:");
+        foreach (var tpl in allTemplates)
+        {
+            Console.WriteLine($"Name: {tpl.Name}, Slug: {tpl.Slug}");
+        }
+
+        // Unregister a template
+        registry.Unregister("my-plugin//custom-template", dbContext);
+
+        // Check if a template is registered
+        var isRegistered = registry.IsRegistered("my-plugin//custom-template");
+        Console.WriteLine($"Is 'my-plugin//custom-template' registered? {isRegistered}");
+    }
+}

@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using WordPress.Core.Data;
+using WordPress.Core.BlockTypes;
+
+class Program
+{
+    static void Main()
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<AppDbContext>()
+            .BuildServiceProvider();
+
+        var dbContext = serviceProvider.GetService<AppDbContext>();
+        var registry = BlockTypeRegistry.GetInstance();
+
+        // Register a new block type
+        var blockArgs = new Dictionary<string, object>
+        {
+            { "title", "Example Block Type" },
+            { "category", "widgets" },
+            { "description", "An example block type." },
+            { "icon", "smiley" },
+            { "attributes", new Dictionary<string, object>
+                {
+                    { "exampleAttribute", new { type = "string" } }
+                }
+            },
+            { "keywords", new List<string> { "example", "block" } }
+        };
+
+        var blockType = registry.Register("my-plugin/example-block-type", blockArgs, dbContext);
+
+        Console.WriteLine($"Registered Block Type: {blockType.Name}");
+
+        // Retrieve all registered block types
+        var allBlockTypes = registry.GetAllRegistered();
+        Console.WriteLine("All Registered Block Types:");
+        foreach (var block in allBlockTypes)
+        {
+            Console.WriteLine($"Name: {block.Name}, Title: {block.Title}");
+        }
+
+        // Unregister a block type
+        registry.Unregister("my-plugin/example-block-type", dbContext);
+
+        // Check if a block type is registered
+        var isRegistered = registry.IsRegistered("my-plugin/example-block-type");
+        Console.WriteLine($"Is 'my-plugin/example-block-type' registered? {isRegistered}");
+    }
+}
