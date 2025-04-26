@@ -1,0 +1,38 @@
+public class CustomizationController : Controller
+{
+    private readonly CustomSettingService _customSettingService;
+
+    public CustomizationController(CustomSettingService customSettingService)
+    {
+        _customSettingService = customSettingService;
+    }
+
+    public IActionResult GetAllSettings()
+    {
+        var settings = _customSettingService.GetAllActiveSettings();
+        return Ok(settings);
+    }
+
+    public IActionResult GetSetting(string key)
+    {
+        var setting = _customSettingService.GetSettingByKey(key);
+        if (setting == null)
+            return NotFound();
+
+        return Ok(setting);
+    }
+
+    [HttpPost]
+    public IActionResult AddOrUpdateSetting([FromBody] CustomSetting setting)
+    {
+        _customSettingService.AddOrUpdateSetting(setting);
+        return Ok();
+    }
+
+    [HttpDelete]
+    public IActionResult DeleteSetting(string key)
+    {
+        _customSettingService.DeleteSettingByKey(key);
+        return Ok();
+    }
+}

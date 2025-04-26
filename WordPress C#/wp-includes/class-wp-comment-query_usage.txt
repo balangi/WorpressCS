@@ -1,0 +1,23 @@
+public class CommentController : Controller
+{
+    private readonly CommentQueryService _commentQueryService;
+
+    public CommentController(CommentQueryService commentQueryService)
+    {
+        _commentQueryService = commentQueryService;
+    }
+
+    public IActionResult GetComments(int postId, int page = 1, int pageSize = 10)
+    {
+        var parameters = new CommentQueryParameters
+        {
+            PostId = postId,
+            PageNumber = page,
+            PageSize = pageSize,
+            IncludeChildren = true
+        };
+
+        var result = _commentQueryService.GetPaginatedComments(parameters);
+        return Ok(result);
+    }
+}
