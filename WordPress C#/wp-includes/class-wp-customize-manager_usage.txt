@@ -1,0 +1,21 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var customSettingService = new CustomSettingService(dbContext);
+
+        // افزودن تنظیم جدید
+        customSettingService.AddSetting("site_title", "My Awesome Site", "string");
+
+        // دریافت تنظیم بر اساس کلید
+        var setting = customSettingService.GetSettingByKey("site_title");
+        Console.WriteLine($"Key: {setting.Key}, Value: {setting.Value}");
+
+        // به‌روزرسانی تنظیم
+        customSettingService.UpdateSetting("site_title", "Updated Site Title");
+
+        // حذف تنظیم
+        customSettingService.DeleteSetting("site_title");
+    }
+}

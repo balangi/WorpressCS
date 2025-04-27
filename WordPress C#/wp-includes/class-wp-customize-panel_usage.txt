@@ -1,0 +1,30 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var customizePanelManager = new CustomizePanelManager(dbContext);
+
+        // افزودن پنل جدید
+        customizePanelManager.AddPanel("Theme Options", "Customize your theme settings.", "theme", "high");
+
+        // افزودن تنظیم به پنل
+        var panel = customizePanelManager.GetAllPanels().FirstOrDefault();
+        if (panel != null)
+        {
+            customizePanelManager.AddPanelSetting(panel.Id, "header_color", "#ffffff");
+            customizePanelManager.AddPanelSetting(panel.Id, "footer_text", "Powered by C#");
+        }
+
+        // دریافت پنل‌ها
+        var panels = customizePanelManager.GetAllPanels();
+        foreach (var p in panels)
+        {
+            Console.WriteLine($"Panel: {p.Title} ({p.Type})");
+            foreach (var setting in p.Settings)
+            {
+                Console.WriteLine($"  - {setting.Key}: {setting.Value}");
+            }
+        }
+    }
+}

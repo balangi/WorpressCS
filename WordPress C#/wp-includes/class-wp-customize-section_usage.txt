@@ -1,0 +1,30 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var customizeSectionManager = new CustomizeSectionManager(dbContext);
+
+        // افزودن بخش جدید
+        customizeSectionManager.AddSection("Header Section", "Customize your header settings.", "theme", "high");
+
+        // افزودن تنظیم به بخش
+        var section = customizeSectionManager.GetAllSections().FirstOrDefault();
+        if (section != null)
+        {
+            customizeSectionManager.AddSectionSetting(section.Id, "header_color", "#ffffff");
+            customizeSectionManager.AddSectionSetting(section.Id, "header_text", "Welcome to our site");
+        }
+
+        // دریافت بخش‌ها
+        var sections = customizeSectionManager.GetAllSections();
+        foreach (var s in sections)
+        {
+            Console.WriteLine($"Section: {s.Title} ({s.Type})");
+            foreach (var setting in s.Settings)
+            {
+                Console.WriteLine($"  - {setting.Key}: {setting.Value}");
+            }
+        }
+    }
+}

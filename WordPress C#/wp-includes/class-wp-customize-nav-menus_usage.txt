@@ -1,0 +1,30 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var customizeNavMenus = new CustomizeNavMenus(dbContext);
+
+        // افزودن منو جدید
+        customizeNavMenus.AddMenu("Main Menu", "main-menu");
+
+        // افزودن آیتم به منو
+        var menu = customizeNavMenus.GetAllMenus().FirstOrDefault();
+        if (menu != null)
+        {
+            customizeNavMenus.AddMenuItem(menu.Id, "Home", "/", 1);
+            customizeNavMenus.AddMenuItem(menu.Id, "About", "/about", 2);
+        }
+
+        // دریافت منوها
+        var menus = customizeNavMenus.GetAllMenus();
+        foreach (var m in menus)
+        {
+            Console.WriteLine($"Menu: {m.Name}");
+            foreach (var item in m.Items)
+            {
+                Console.WriteLine($"  - {item.Title}: {item.Url}");
+            }
+        }
+    }
+}
