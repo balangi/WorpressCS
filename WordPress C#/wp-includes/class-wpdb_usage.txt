@@ -1,0 +1,43 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbManager = new DatabaseManager("YourConnectionStringHere");
+
+        try
+        {
+            // اجرای پرس‌وجوی دستی
+            string insertQuery = "INSERT INTO Posts (Title, Content) VALUES (@Title, @Content)";
+            dbManager.Query(insertQuery, new { Title = "Sample Post", Content = "This is a sample post." });
+
+            // دریافت تمام ردیف‌ها
+            string selectAllQuery = "SELECT * FROM Posts";
+            var posts = dbManager.GetResults<Post>(selectAllQuery);
+            foreach (var post in posts)
+            {
+                Console.WriteLine($"ID: {post.Id}, Title: {post.Title}");
+            }
+
+            // دریافت یک ردیف
+            string selectOneQuery = "SELECT * FROM Posts WHERE Id = @Id";
+            var post = dbManager.GetRow<Post>(selectOneQuery, new { Id = 1 });
+            Console.WriteLine($"Retrieved Post: {post?.Title}");
+
+            // دریافت یک مقدار
+            string countQuery = "SELECT COUNT(*) FROM Posts";
+            int postCount = dbManager.GetVar<int>(countQuery);
+            Console.WriteLine($"Total Posts: {postCount}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {dbManager.GetLastError()}");
+        }
+    }
+}
+
+public class Post
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Content { get; set; }
+}

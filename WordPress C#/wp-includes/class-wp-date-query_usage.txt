@@ -1,0 +1,21 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var dateQuery = new DateQuery();
+
+        // افزودن شرایط تاریخ
+        dateQuery.AddAfter(new DateTime(2023, 1, 1), inclusive: true);
+        dateQuery.AddBefore(new DateTime(2023, 12, 31), inclusive: true);
+
+        // ساخت پرس‌وجو
+        var posts = dateQuery.BuildQuery(dbContext.Posts).ToList();
+
+        // نمایش نتایج
+        foreach (var post in posts)
+        {
+            Console.WriteLine($"Title: {post.Title}, Published Date: {post.PublishedDate}");
+        }
+    }
+}

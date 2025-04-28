@@ -1,0 +1,26 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var duotoneManager = new DuotoneManager(dbContext);
+
+        // افزودن تنظیم Duotone جدید
+        duotoneManager.AddDuotoneSetting(
+            name: "Warm Tone",
+            primaryColor: "#FF5733",
+            secondaryColor: "#33FF57",
+            cssSelector: ".image-duotone"
+        );
+
+        // دریافت تمام تنظیمات Duotone
+        var settings = duotoneManager.GetAllDuotoneSettings();
+        foreach (var setting in settings)
+        {
+            Console.WriteLine($"Name: {setting.Name}");
+            Console.WriteLine($"Primary Color: {setting.PrimaryColor}, Secondary Color: {setting.SecondaryColor}");
+            Console.WriteLine($"CSS Selector: {setting.CssSelector}");
+            Console.WriteLine($"Generated CSS: {setting.GeneratedCss}");
+        }
+    }
+}

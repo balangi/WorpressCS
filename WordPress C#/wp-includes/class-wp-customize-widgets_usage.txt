@@ -1,0 +1,30 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var customizeWidgetManager = new CustomizeWidgetManager(dbContext);
+
+        // افزودن ویجت جدید
+        customizeWidgetManager.AddWidget("Text Widget", "text", "sidebar-1");
+
+        // افزودن تنظیم به ویجت
+        var widget = customizeWidgetManager.GetAllWidgets().FirstOrDefault();
+        if (widget != null)
+        {
+            customizeWidgetManager.AddWidgetSetting(widget.Id, "title", "Welcome to our site");
+            customizeWidgetManager.AddWidgetSetting(widget.Id, "content", "This is a sample text widget.");
+        }
+
+        // دریافت ویجت‌ها
+        var widgets = customizeWidgetManager.GetAllWidgets();
+        foreach (var w in widgets)
+        {
+            Console.WriteLine($"Widget: {w.Name} ({w.Type})");
+            foreach (var setting in w.Settings)
+            {
+                Console.WriteLine($"  - {setting.Key}: {setting.Value}");
+            }
+        }
+    }
+}

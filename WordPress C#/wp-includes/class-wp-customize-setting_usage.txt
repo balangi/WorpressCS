@@ -1,0 +1,28 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var customizeSettingManager = new CustomizeSettingManager(dbContext);
+
+        // افزودن تنظیم جدید
+        customizeSettingManager.AddSetting("site_title", "My Awesome Site", "theme_mod", "Default Title");
+
+        // دریافت تنظیم
+        var setting = customizeSettingManager.GetSetting("site_title");
+        Console.WriteLine($"Key: {setting.Key}, Value: {setting.Value}");
+
+        // به‌روزرسانی تنظیم
+        customizeSettingManager.UpdateSetting("site_title", "Updated Site Title");
+
+        // ذخیره تمام تغییرات
+        customizeSettingManager.Save();
+
+        // دریافت تمام تنظیمات
+        var settings = customizeSettingManager.GetAllSettings();
+        foreach (var s in settings)
+        {
+            Console.WriteLine($"Key: {s.Key}, Value: {s.Value}, Type: {s.Type}");
+        }
+    }
+}
