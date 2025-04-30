@@ -1,0 +1,32 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // تنظیم Dependency Injection
+        var services = new ServiceCollection();
+        services.AddDbContext<AppDbContext>();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<FeedCacheTransient>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        // دریافت نمونه‌های مورد نیاز
+        var feedCacheTransient = serviceProvider.GetRequiredService<FeedCacheTransient>();
+
+        // ذخیره داده‌ها در کش
+        feedCacheTransient.Save(new { Title = "Sample Feed", Content = "This is a sample feed." });
+
+        // بارگذاری داده‌ها از کش
+        var data = feedCacheTransient.Load();
+        Console.WriteLine($"Loaded Data: {data}");
+
+        // به‌روزرسانی زمان آخرین تغییر
+        feedCacheTransient.Touch();
+
+        // حذف داده‌های کش
+        feedCacheTransient.Unlink();
+    }
+}

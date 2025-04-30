@@ -1,0 +1,40 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // تنظیم Dependency Injection
+        var services = new ServiceCollection();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<HttpCookie>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        // دریافت نمونه‌های مورد نیاز
+        var logger = serviceProvider.GetRequiredService<ILogger<HttpCookie>>();
+        var httpCookie = new HttpCookie(
+            new System.Collections.Hashtable
+            {
+                { "name", "test_cookie" },
+                { "value", "12345" },
+                { "expires", DateTime.UtcNow.AddDays(1) },
+                { "path", "/" },
+                { "domain", "example.com" },
+                { "port", "80" },
+                { "host_only", "true" }
+            },
+            "https://example.com",
+            logger
+        );
+
+        // تست اعتبارسنجی
+        Console.WriteLine($"Is valid: {httpCookie.Test("https://example.com/path")}");
+
+        // دریافت سربرگ کوکی
+        Console.WriteLine($"Header Value: {httpCookie.GetHeaderValue()}");
+        Console.WriteLine($"Full Header: {httpCookie.GetFullHeader()}");
+    }
+}

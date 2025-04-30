@@ -1,0 +1,43 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var errorManager = new ErrorManager();
+
+        // افزودن خطای جدید
+        errorManager.Add("invalid_input", "Input is invalid.");
+        errorManager.Add("not_found", "Resource not found.", new { ResourceId = 123 });
+
+        // دریافت پیام‌های خطا
+        var messages = errorManager.GetErrorMessages();
+        Console.WriteLine("Error Messages:");
+        foreach (var message in messages)
+        {
+            Console.WriteLine($"- {message}");
+        }
+
+        // دریافت داده‌های مرتبط با خطا
+        var data = errorManager.GetAllErrorData("not_found");
+        Console.WriteLine("Error Data:");
+        foreach (var item in data)
+        {
+            Console.WriteLine($"- {item}");
+        }
+
+        // حذف خطای خاص
+        errorManager.Remove("invalid_input");
+
+        // ادغام خطاهای دو شیء
+        var anotherErrorManager = new ErrorManager();
+        anotherErrorManager.Add("conflict", "Conflict detected.");
+        errorManager.MergeFrom(anotherErrorManager);
+
+        // دریافت تمام کدهای خطا
+        var codes = errorManager.GetErrorCodes();
+        Console.WriteLine("Error Codes:");
+        foreach (var code in codes)
+        {
+            Console.WriteLine($"- {code}");
+        }
+    }
+}

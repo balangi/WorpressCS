@@ -1,0 +1,29 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // تنظیم Dependency Injection
+        var services = new ServiceCollection();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<AppDbContext>();
+        services.AddSingleton<FeedCache>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        // دریافت نمونه‌های مورد نیاز
+        var feedCache = serviceProvider.GetRequiredService<FeedCache>();
+
+        // ایجاد شیء کش جدید
+        var transient = feedCache.Create(
+            location: "https://example.com/feed",
+            filename: "example_feed",
+            extension: "spi"
+        );
+
+        // ذخیره داده‌ها
+        transient.SaveData(new { Title = "Sample Feed", Content = "This is a sample feed." });
+    }
+}

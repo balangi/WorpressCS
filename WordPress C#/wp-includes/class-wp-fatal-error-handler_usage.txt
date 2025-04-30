@@ -1,0 +1,11 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var fatalErrorHandler = new FatalErrorHandler(dbContext);
+
+        // مدیریت خطاهای جدی
+        fatalErrorHandler.Handle();
+    }
+}

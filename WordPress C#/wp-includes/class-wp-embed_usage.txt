@@ -1,0 +1,17 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var embedManager = new EmbedManager(dbContext);
+
+        // تبدیل URL به HTML Embed شده
+        var embedHtml = embedManager.GetEmbedHtml("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+        Console.WriteLine(embedHtml);
+
+        // جستجوی URLهای قابل Embed در متن
+        var content = "Check out this video: https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        var autoEmbeddedContent = embedManager.AutoEmbed(content);
+        Console.WriteLine(autoEmbeddedContent);
+    }
+}

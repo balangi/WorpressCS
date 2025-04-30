@@ -1,0 +1,20 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var hookManager = new HookManager();
+
+        // افزودن هک‌ها
+        hookManager.AddFilter("init", () => Console.WriteLine("Init action executed."), 10);
+        hookManager.AddFilter("init", () => Console.WriteLine("Another init action executed."), 5);
+
+        // اجرای همه هک‌ها
+        hookManager.DoAction();
+
+        // حذف یک هک
+        hookManager.RemoveFilter("init", () => Console.WriteLine("Another init action executed."), 5);
+
+        // اجرای همه هک‌ها دوباره
+        hookManager.DoAction();
+    }
+}

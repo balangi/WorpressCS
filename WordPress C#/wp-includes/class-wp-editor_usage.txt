@@ -1,0 +1,41 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        var dbContext = new AppDbContext();
+        var editorManager = new EditorManager(dbContext);
+
+        // تولید HTML برای ویرایشگر
+        var editorHtml = editorManager.GenerateEditorHtml(
+            editorId: "content",
+            content: "<p>Hello, World!</p>",
+            settings: new Dictionary<string, object>
+            {
+                { "tinymce", true },
+                { "quicktags", true },
+                { "textarea_rows", 15 },
+                { "custom_css", ".wp-editor-wrap { border: 1px solid #ccc; }" }
+            }
+        );
+
+        Console.WriteLine(editorHtml);
+
+        // ذخیره تنظیمات ویرایشگر (اگر نیاز به ذخیره‌سازی باشد)
+        var setting = new EditorSetting
+        {
+            EditorId = "content",
+            Content = "<p>Hello, World!</p>",
+            UseTinyMCE = true,
+            UseQuickTags = true,
+            CustomCSS = ".wp-editor-wrap { border: 1px solid #ccc; }"
+        };
+        editorManager.SaveEditorSettings(setting);
+
+        // دریافت تنظیمات ویرایشگر (اگر نیاز به ذخیره‌سازی باشد)
+        var savedSetting = editorManager.GetEditorSettings(1);
+        if (savedSetting != null)
+        {
+            Console.WriteLine($"Editor ID: {savedSetting.EditorId}, Content: {savedSetting.Content}");
+        }
+    }
+}
