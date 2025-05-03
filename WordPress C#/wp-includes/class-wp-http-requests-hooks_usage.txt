@@ -1,0 +1,34 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // تنظیم داده‌های درخواست
+        var url = "https://example.com";
+        var request = new Dictionary<string, object>
+        {
+            { "method", "GET" },
+            { "headers", new Dictionary<string, string> { { "Content-Type", "application/json" } } }
+        };
+
+        // ایجاد نمونه از کلاس
+        var hooks = new HttpRequestsHooks(url, request);
+
+        // ثبت رویدادها
+        hooks.HttpApiCurl += (handle, req, uri) =>
+        {
+            Console.WriteLine($"http_api_curl triggered for URL: {uri}");
+        };
+
+        hooks.RequestsHook += (hookName, parameters, req, uri) =>
+        {
+            Console.WriteLine($"requests-{hookName} triggered for URL: {uri}");
+        };
+
+        // ارسال هک
+        var parameters = new List<object> { "sample_parameter" };
+        hooks.Dispatch("curl.before_send", parameters);
+    }
+}

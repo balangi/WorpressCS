@@ -1,0 +1,34 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // فشرده‌سازی داده‌ها
+        var rawData = "This is a test string to compress.";
+        var compressed = HttpEncodingManager.Compress(rawData);
+        Console.WriteLine($"Compressed Data: {compressed}");
+
+        // بازکردن داده‌ها
+        var decompressed = HttpEncodingManager.Decompress(compressed);
+        Console.WriteLine($"Decompressed Data: {decompressed}");
+
+        // بررسی انواع فشرده‌سازی قابل قبول
+        var url = "https://example.com";
+        var args = new Dictionary<string, object>
+        {
+            { "decompress", true }
+        };
+        var acceptedEncodings = HttpEncodingManager.AcceptEncoding(url, args);
+        Console.WriteLine($"Accepted Encodings: {acceptedEncodings}");
+
+        // بررسی نیاز به بازکردن داده‌ها
+        var headers = new Dictionary<string, string>
+        {
+            { "Content-Encoding", "gzip" }
+        };
+        var shouldDecode = HttpEncodingManager.ShouldDecode(headers);
+        Console.WriteLine($"Should Decode: {shouldDecode}");
+    }
+}

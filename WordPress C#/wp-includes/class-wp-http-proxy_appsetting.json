@@ -1,0 +1,9 @@
+{
+  "ProxySettings": {
+    "Host": "192.168.84.101",
+    "Port": "8080",
+    "Username": "proxyuser",
+    "Password": "proxypass",
+    "BypassHosts": "localhost, www.example.com, *.wordpress.org"
+  }
+}
