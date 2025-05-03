@@ -1,0 +1,34 @@
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        // تنظیم Dependency Injection
+        var services = new ServiceCollection();
+        services.AddDbContext<AppDbContext>();
+        services.AddHttpClient();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<HttpIxrClient>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        // دریافت نمونه‌های مورد نیاز
+        var httpIxrClient = serviceProvider.GetRequiredService<HttpIxrClient>();
+
+        // ارسال درخواست XML-RPC
+        var success = await httpIxrClient.QueryAsync("example.method", "arg1", "arg2");
+
+        if (success)
+        {
+            Console.WriteLine("XML-RPC request succeeded.");
+        }
+        else
+        {
+            Console.WriteLine($"XML-RPC request failed: {httpIxrClient.Error.Message}");
+        }
+    }
+}
