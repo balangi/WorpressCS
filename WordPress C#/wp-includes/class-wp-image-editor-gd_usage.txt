@@ -1,0 +1,28 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد نمونه از کلاس
+        var editor = new ImageEditorGD("example.jpg");
+
+        // بارگذاری تصویر
+        editor.Load();
+
+        // تنظیم کیفیت
+        editor.SetQuality(90);
+
+        // چرخش تصویر
+        editor.Rotate(90);
+
+        // فلیپ تصویر
+        editor.Flip(horizontal: true, vertical: false);
+
+        // تغییر اندازه تصویر
+        editor.Resize(800, 600);
+
+        // ذخیره‌سازی تصویر
+        editor.Save("output.jpg");
+    }
+}

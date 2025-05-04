@@ -1,0 +1,30 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد نمونه از کلاس
+        var response = new HttpResponseManager(
+            data: new { message = "Hello, World!" },
+            status: 200,
+            headers: new Dictionary<string, string>
+            {
+                { "Content-Type", "application/json" },
+                { "Cache-Control", "no-cache" }
+            }
+        );
+
+        // تنظیم هدر جدید
+        response.SetHeader("X-Custom-Header", "CustomValue");
+
+        // دریافت اطلاعات پاسخ
+        Console.WriteLine($"Status Code: {response.GetStatus()}");
+        Console.WriteLine($"Headers: {string.Join(", ", response.GetHeaders())}");
+        Console.WriteLine($"Data: {response.GetData()}");
+
+        // سریال‌سازی داده‌ها به JSON
+        Console.WriteLine($"JSON Serialized Data: {response.JsonSerialize()}");
+    }
+}

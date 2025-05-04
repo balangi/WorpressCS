@@ -1,0 +1,49 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد نمونه از کلاس
+        var editor = new ConcreteImageEditor("example.jpg");
+
+        // بارگذاری تصویر
+        editor.Load();
+
+        // تنظیم کیفیت
+        editor.SetQuality(90);
+
+        // چرخش تصویر
+        editor.Rotate(90);
+
+        // فلیپ تصویر
+        editor.Flip(horizontal: true, vertical: false);
+
+        // ذخیره‌سازی تصویر
+        editor.Save("output.jpg");
+    }
+}
+
+// کلاس پیاده‌سازی شده
+public class ConcreteImageEditor : ImageEditorManager
+{
+    public ConcreteImageEditor(string file) : base(file) { }
+
+    public override bool Test()
+    {
+        // تست پشتیبانی از محیط فعلی
+        return true;
+    }
+
+    public override bool SupportsMimeType(string mimeType)
+    {
+        // تست پشتیبانی از نوع MIME
+        return mimeType == "image/jpeg" || mimeType == "image/png";
+    }
+
+    public override void Load()
+    {
+        // بارگذاری تصویر
+        Console.WriteLine($"Image loaded from: {File}");
+    }
+}

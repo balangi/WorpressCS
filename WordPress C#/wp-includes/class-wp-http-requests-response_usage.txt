@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد یک نمونه از پاسخ HTTP
+        var cookies = new List<HttpResponseCookie>
+        {
+            new HttpResponseCookie
+            {
+                Name = "test_cookie",
+                Value = "12345",
+                Attributes = new Dictionary<string, string> { { "path", "/" }, { "expires", DateTime.UtcNow.ToString() } },
+                Flags = new Dictionary<string, bool> { { "host-only", true } }
+            }
+        };
+
+        var httpResponse = new HttpResponse
+        {
+            StatusCode = 200,
+            Body = "This is the response body.",
+            Headers = new Dictionary<string, string> { { "Content-Type", "text/plain" } },
+            Cookies = cookies
+        };
+
+        // ایجاد نمونه از کلاس پاسخ
+        var response = new HttpRequestsResponse(httpResponse, "response.txt");
+
+        // دریافت اطلاعات پاسخ
+        Console.WriteLine($"Status Code: {response.GetStatus()}");
+        Console.WriteLine($"Body: {response.GetData()}");
+        Console.WriteLine($"Headers: {string.Join(", ", response.GetHeaders().Select(h => $"{h.Key}: {h.Value}"))}");
+
+        // تبدیل پاسخ به آرایه
+        var responseArray = response.ToArray();
+        Console.WriteLine($"Response Array: {string.Join(", ", responseArray.Select(r => $"{r.Key}: {r.Value}"))}");
+    }
+}

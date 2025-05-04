@@ -1,0 +1,39 @@
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        // تنظیم Dependency Injection
+        var services = new ServiceCollection();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<HttpStreamManager>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        // دریافت نمونه‌های مورد نیاز
+        var httpStreamManager = serviceProvider.GetRequiredService<HttpStreamManager>();
+
+        // تنظیمات درخواست
+        var options = new HttpRequestOptions
+        {
+            SslVerify = true,
+            StreamToFile = true,
+            Filename = "response.txt",
+            Proxy = new HttpProxy
+            {
+                Host = "proxy.example.com",
+                Port = 8080
+            }
+        };
+
+        // ارسال درخواست
+        var url = "https://example.com";
+        var response = await httpStreamManager.SendRequestAsync(url, options);
+
+        Console.WriteLine($"Status Code: {response.StatusCode}");
+    }
+}
