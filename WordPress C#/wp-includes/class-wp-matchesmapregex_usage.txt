@@ -1,0 +1,23 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // تعریف رشته و مقادیر $matches[]
+        var subject = "Query: ?id=$matches[1]&name=$matches[2]";
+        var matches = new Dictionary<int, string>
+        {
+            { 1, "123" },
+            { 2, "John Doe" }
+        };
+
+        // اجرای جایگزینی
+        var result = MatchesMapRegex.Apply(subject, matches);
+
+        // نمایش نتیجه
+        Console.WriteLine("Result:");
+        Console.WriteLine(result);
+    }
+}

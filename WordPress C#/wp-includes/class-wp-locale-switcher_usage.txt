@@ -1,0 +1,38 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // تنظیم Dependency Injection
+        var services = new ServiceCollection();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<LocaleSwitcher>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        // دریافت نمونه‌های مورد نیاز
+        var localeSwitcher = serviceProvider.GetRequiredService<LocaleSwitcher>();
+
+        // تعویض Locale
+        localeSwitcher.OnSwitchLocale += (locale, userId) =>
+        {
+            Console.WriteLine($"Switched to locale: {locale}, User ID: {userId}");
+        };
+
+        localeSwitcher.SwitchToLocale("fa_IR");
+
+        // بازگرداندن Locale قبلی
+        localeSwitcher.OnRestorePreviousLocale += (currentLocale, previousLocale) =>
+        {
+            Console.WriteLine($"Restored from locale: {previousLocale} to {currentLocale}");
+        };
+
+        localeSwitcher.RestorePreviousLocale();
+
+        // بررسی وضعیت تعویض
+        Console.WriteLine($"Is locale switched? {localeSwitcher.IsSwitched()}");
+    }
+}

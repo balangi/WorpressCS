@@ -1,0 +1,42 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد نمونه از کلاس
+        var items = new List<Dictionary<string, object>>
+        {
+            new Dictionary<string, object> { { "id", 1 }, { "name", "Alice" }, { "age", 30 } },
+            new Dictionary<string, object> { { "id", 2 }, { "name", "Bob" }, { "age", 25 } },
+            new Dictionary<string, object> { { "id", 3 }, { "name", "Charlie" }, { "age", 35 } }
+        };
+
+        var listUtil = new ListUtil<Dictionary<string, object>>(items);
+
+        // فیلتر کردن
+        var filtered = listUtil.Filter(new Dictionary<string, object> { { "age", 30 } });
+        Console.WriteLine("Filtered:");
+        foreach (var item in filtered)
+        {
+            Console.WriteLine($"ID: {item["id"]}, Name: {item["name"]}, Age: {item["age"]}");
+        }
+
+        // استخراج فیلد خاص
+        var names = listUtil.Pluck("name");
+        Console.WriteLine("\nPlucked Names:");
+        foreach (var name in names)
+        {
+            Console.WriteLine(name);
+        }
+
+        // مرتب‌سازی
+        var sorted = listUtil.Sort(new Dictionary<string, string> { { "age", "ASC" } });
+        Console.WriteLine("\nSorted by Age:");
+        foreach (var item in sorted)
+        {
+            Console.WriteLine($"ID: {item["id"]}, Name: {item["name"]}, Age: {item["age"]}");
+        }
+    }
+}

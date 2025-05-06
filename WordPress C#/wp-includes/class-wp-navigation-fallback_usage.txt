@@ -1,0 +1,26 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddDbContext<NavigationDbContext>();
+        services.AddSingleton<NavigationFallback>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var context = serviceProvider.GetRequiredService<NavigationDbContext>();
+        var fallback = NavigationFallback.GetFallback(context);
+
+        if (fallback != null)
+        {
+            Console.WriteLine($"Fallback Menu Found: {fallback.Title}");
+        }
+        else
+        {
+            Console.WriteLine("No Fallback Menu Found.");
+        }
+    }
+}

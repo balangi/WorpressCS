@@ -1,0 +1,34 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // تنظیم Dependency Injection
+        var services = new ServiceCollection();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<MetadataLazyloader>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        // دریافت نمونه‌های مورد نیاز
+        var lazyloader = serviceProvider.GetRequiredService<MetadataLazyloader>();
+
+        // اضافه کردن اشیاء به صف
+        lazyloader.OnQueuedObjects += (objectIds, objectType, instance) =>
+        {
+            Console.WriteLine($"Queued objects of type {objectType}: {string.Join(", ", objectIds)}");
+        };
+
+        lazyloader.QueueObjects("term", new List<int> { 1, 2, 3 });
+
+        // Lazy Loading متادیتا
+        var result = lazyloader.LazyloadMetaCallback(null, 0, "", false, "term");
+
+        // بازنشانی صف
+        lazyloader.ResetQueue("term");
+    }
+}

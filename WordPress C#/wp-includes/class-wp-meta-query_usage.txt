@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // مثال: ایجاد پرس‌وجو
+        var queries = new List<MetaQueryClause>
+        {
+            new MetaQueryClause { Key = "Age", Value = 30, Compare = "=" },
+            new MetaQueryClause { Key = "Name", Value = new List<string> { "John", "Doe" }, Compare = "IN" }
+        };
+
+        var metaQuery = new MetaQuery(queries, "AND");
+
+        // مثال: استفاده از EF Core برای اجرای پرس‌وجو
+        using (var context = new MyDbContext())
+        {
+            var expression = metaQuery.BuildExpression<MyEntity>();
+            var results = context.MyEntities.Where(expression).ToList();
+
+            foreach (var result in results)
+            {
+                Console.WriteLine($"ID: {result.Id}, Name: {result.Name}, Age: {result.Age}");
+            }
+        }
+    }
+}
+
+// مثال: Entity برای EF Core
+public class MyEntity
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+// مثال: DbContext برای EF Core
+public class MyDbContext : DbContext
+{
+    public DbSet<MyEntity> MyEntities { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("YourConnectionStringHere");
+    }
+}

@@ -1,0 +1,27 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // تنظیم Dependency Injection
+        var services = new ServiceCollection();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<LocaleManager>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        // دریافت نمونه‌های مورد نیاز
+        var localeManager = serviceProvider.GetRequiredService<LocaleManager>();
+
+        // دریافت نام‌های ترجمه‌شده
+        Console.WriteLine($"Translated Weekday (Monday): {localeManager.GetWeekday("Monday")}");
+        Console.WriteLine($"Translated Month (January): {localeManager.GetMonth("January")}");
+
+        // دریافت تنظیمات تقویم
+        Console.WriteLine($"First Day of Week: {localeManager.GetCalendarSetting("FirstDayOfWeek")}");
+        Console.WriteLine($"Date Format: {localeManager.GetCalendarSetting("DateFormat")}");
+    }
+}
