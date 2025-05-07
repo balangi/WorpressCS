@@ -1,0 +1,28 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddDbContext<NetworkDbContext>();
+        services.AddSingleton<NetworkQuery>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var context = serviceProvider.GetRequiredService<NetworkDbContext>();
+        var query = new NetworkQuery(new Dictionary<string, object>
+        {
+            { "domain", "example.com" },
+            { "number", 10 }
+        });
+
+        var networks = query.GetNetworks(context);
+
+        foreach (var network in networks)
+        {
+            Console.WriteLine($"Network ID: {network.Id}, Domain: {network.Domain}");
+        }
+    }
+}

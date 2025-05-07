@@ -1,0 +1,27 @@
+using System;
+using Microsoft.Extensions.DependencyInjection;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddDbContext<NetworkDbContext>();
+        services.AddSingleton<Network>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var context = serviceProvider.GetRequiredService<NetworkDbContext>();
+        var network = Network.GetInstance(context, 1);
+
+        if (network != null)
+        {
+            Console.WriteLine($"Network Found: {network.SiteName}");
+            Console.WriteLine($"Main Site ID: {network.GetMainSiteId()}");
+        }
+        else
+        {
+            Console.WriteLine("No Network Found.");
+        }
+    }
+}

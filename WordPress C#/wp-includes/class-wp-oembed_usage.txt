@@ -1,0 +1,29 @@
+using System;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddHttpClient();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<OEmbed>();
+
+        var serviceProvider = services.BuildServiceProvider();
+        var oEmbed = serviceProvider.GetRequiredService<OEmbed>();
+
+        var url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        var data = await oEmbed.FetchAsync(url);
+
+        if (data != null)
+        {
+            var html = oEmbed.DataToHtml(data, url);
+            Console.WriteLine($"HTML Embed Code: {html}");
+        }
+        else
+        {
+            Console.WriteLine("Failed to fetch oEmbed data.");
+        }
+    }
+}

@@ -1,0 +1,28 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddMemoryCache();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<ObjectCache>();
+
+        var serviceProvider = services.BuildServiceProvider();
+        var objectCache = serviceProvider.GetRequiredService<ObjectCache>();
+
+        // اضافه کردن مقدار به Cache
+        objectCache.Set("key1", "value1", TimeSpan.FromMinutes(10));
+
+        // دریافت مقدار از Cache
+        var value = objectCache.Get<string>("key1");
+        Console.WriteLine($"Value from cache: {value}");
+
+        // حذف مقدار از Cache
+        objectCache.Delete("key1");
+
+        // حذف تمام Cache
+        objectCache.Flush();
+    }
+}
