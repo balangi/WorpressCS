@@ -1,0 +1,14 @@
+var dbContext = new AppDbContext();
+var sessionManager = SessionTokenManager.GetInstance(dbContext, userId: 1);
+
+// ایجاد یک توکن جدید
+var token = sessionManager.Create(DateTime.UtcNow.AddDays(1));
+
+// اعتبارسنجی توکن
+bool isValid = sessionManager.Verify(token);
+
+// حذف تمام جلسات به جز جلسه فعلی
+sessionManager.DestroyOthers(token);
+
+// حذف تمام جلسات برای یک کاربر
+sessionManager.DestroyAll();

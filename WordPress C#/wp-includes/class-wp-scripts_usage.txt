@@ -1,0 +1,20 @@
+var dbContext = new AppDbContext();
+var scriptService = new ScriptService(dbContext);
+
+// ثبت یک اسکریپت جدید
+scriptService.Register(
+    "my-script",
+    "/path/to/script.js",
+    new List<ScriptDependency>
+    {
+        new ScriptDependency { DependencyHandle = "dep1", Strategy = "defer" },
+        new ScriptDependency { DependencyHandle = "dep2", Strategy = "async" }
+    },
+    "1.0.0"
+);
+
+// علامت‌گذاری اسکریپت برای اجرا
+scriptService.Enqueue("my-script");
+
+// چاپ لیست اسکریپت‌های علامت‌گذاری‌شده
+scriptService.PrintEnqueuedScripts();

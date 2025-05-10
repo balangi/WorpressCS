@@ -1,0 +1,16 @@
+var dbContext = new AppDbContext();
+var roleService = new RoleService(dbContext);
+
+// ایجاد نقش جدید
+roleService.AddRole("admin", "Administrator");
+
+// افزودن دسترسی به نقش
+roleService.AddCapabilityToRole("admin", "edit_posts");
+roleService.AddCapabilityToRole("admin", "delete_posts");
+
+// دریافت دسترسی‌های یک نقش
+var capabilities = roleService.GetCapabilitiesForRole("admin");
+foreach (var cap in capabilities)
+{
+    Console.WriteLine(cap);
+}

@@ -1,0 +1,20 @@
+var dbContext = new AppDbContext();
+var scriptModuleService = new ScriptModuleService(dbContext);
+
+// ثبت یک ماژول جدید
+scriptModuleService.Register(
+    "my-module",
+    "/path/to/module.js",
+    new List<ScriptModuleDependency>
+    {
+        new ScriptModuleDependency { DependencyId = "dep1", ImportType = "static" },
+        new ScriptModuleDependency { DependencyId = "dep2", ImportType = "dynamic" }
+    },
+    "1.0.0"
+);
+
+// علامت‌گذاری ماژول برای اجرا
+scriptModuleService.Enqueue("my-module");
+
+// چاپ لیست ماژول‌های علامت‌گذاری‌شده
+scriptModuleService.PrintEnqueuedModules();
