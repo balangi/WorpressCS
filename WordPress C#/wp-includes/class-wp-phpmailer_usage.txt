@@ -1,0 +1,29 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
+        services.AddSingleton<WpPhpMailer>();
+
+        var serviceProvider = services.BuildServiceProvider();
+        var wpPhpMailer = serviceProvider.GetRequiredService<WpPhpMailer>();
+
+        try
+        {
+            wpPhpMailer.SendEmail(
+                from: "sender@example.com",
+                to: "recipient@example.com",
+                subject: "Test Email",
+                body: "This is a test email."
+            );
+            Console.WriteLine("Email sent successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}

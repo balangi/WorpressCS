@@ -1,0 +1,9 @@
+using Microsoft.Extensions.DependencyInjection;
+
+var services = new ServiceCollection();
+services.AddMemoryCache();
+services.AddLogging(configure => configure.AddConsole());
+services.AddControllers();
+services.AddSingleton<OEmbedController>();
+
+var serviceProvider = services.BuildServiceProvider();

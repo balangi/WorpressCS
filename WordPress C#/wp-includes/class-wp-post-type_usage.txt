@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddMemoryCache();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer("YourConnectionStringHere"));
+        services.AddSingleton<PostType>();
+
+        var serviceProvider = services.BuildServiceProvider();
+        var postTypeService = serviceProvider.GetRequiredService<PostType>();
+
+        // ثبت نوع پست
+        postTypeService.Name = "custom_post";
+        postTypeService.Label = "Custom Posts";
+        postTypeService.Rewrite = new RewriteSettings
+        {
+            Slug = "custom-posts",
+            Feeds = true,
+            Pages = true
+        };
+
+        postTypeService.RegisterPostType(new Dictionary<string, object>());
+
+        Console.WriteLine("Post type registered successfully.");
+
+        // حذف نوع پست
+        postTypeService.UnregisterPostType();
+        Console.WriteLine("Post type unregistered successfully.");
+    }
+}

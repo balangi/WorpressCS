@@ -1,0 +1,35 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddDbContext<RecoveryDbContext>(options =>
+            options.UseSqlServer("YourConnectionStringHere"));
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddSingleton<PausedExtensionsStorage>();
+
+        var serviceProvider = services.BuildServiceProvider();
+        var storage = serviceProvider.GetRequiredService<PausedExtensionsStorage>();
+
+        // ثبت خطا
+        storage.Set("my-plugin", new ErrorInfo
+        {
+            Type = 1,
+            File = "functions.php",
+            Line = 42,
+            Message = "Undefined variable: $foo"
+        });
+
+        // دریافت خطا
+        var error = storage.Get("my-plugin");
+        Console.WriteLine($"Error Message: {error.Message}");
+
+        // حذف خطا
+        storage.Delete("my-plugin");
+
+        // حذف تمام خطاها
+        storage.DeleteAll();
+    }
+}

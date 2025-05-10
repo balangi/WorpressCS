@@ -1,0 +1,36 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddMemoryCache();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer("YourConnectionStringHere"));
+        services.AddSingleton<Post>();
+
+        var serviceProvider = services.BuildServiceProvider();
+        var postService = serviceProvider.GetRequiredService<Post>();
+
+        var postId = 1;
+        var post = Post.GetInstance(postId, serviceProvider.GetService<IMemoryCache>(), serviceProvider.GetService<AppDbContext>(), serviceProvider.GetService<ILogger<Post>>());
+
+        if (post != null)
+        {
+            Console.WriteLine($"Post Title: {post.PostTitle}");
+            Console.WriteLine($"Post Content: {post.PostContent}");
+
+            var postArray = post.ToArray();
+            foreach (var item in postArray)
+            {
+                Console.WriteLine($"{item.Key}: {item.Value}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Post not found.");
+        }
+    }
+}

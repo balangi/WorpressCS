@@ -1,0 +1,43 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddMemoryCache();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer("YourConnectionStringHere"));
+        services.AddSingleton<PostQuery>();
+
+        var serviceProvider = services.BuildServiceProvider();
+        var postQuery = serviceProvider.GetRequiredService<PostQuery>();
+
+        // تنظیم پارامترهای پرس‌وجو
+        var query = new Dictionary<string, object>
+        {
+            { "post_type", "post" },
+            { "category", "news" },
+            { "posts_per_page", 5 }
+        };
+
+        postQuery.ParseQuery(query);
+
+        // اجرای پرس‌وجو
+        var posts = postQuery.GetPosts();
+
+        if (postQuery.Is404())
+        {
+            Console.WriteLine("No posts found.");
+        }
+        else
+        {
+            foreach (var post in posts)
+            {
+                Console.WriteLine($"Post Title: {post.Title}");
+            }
+        }
+    }
+}

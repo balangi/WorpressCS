@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddMemoryCache();
+        services.AddLogging(configure => configure.AddConsole());
+        services.AddHttpClient();
+        services.AddSingleton<PluginDependenciesService>();
+
+        var serviceProvider = services.BuildServiceProvider();
+        var pluginDependenciesService = serviceProvider.GetRequiredService<PluginDependenciesService>();
+
+        // شبیه‌سازی لیست پلاگین‌ها
+        var plugins = new Dictionary<string, PluginInfo>
+        {
+            { "plugin-a", new PluginInfo { Name = "Plugin A", RequiresPlugins = "plugin-b", IsActive = true } },
+            { "plugin-b", new PluginInfo { Name = "Plugin B", RequiresPlugins = "plugin-c", IsActive = false } },
+            { "plugin-c", new PluginInfo { Name = "Plugin C", RequiresPlugins = "", IsActive = true } }
+        };
+
+        // خواندن وابستگی‌ها
+        pluginDependenciesService.ReadDependenciesFromPluginHeaders(plugins);
+
+        // بررسی وابستگی‌های نصب‌نشده
+        var hasUnmetDependencies = pluginDependenciesService.HasUnmetDependencies("plugin-a");
+        Console.WriteLine($"Has Unmet Dependencies: {hasUnmetDependencies}");
+
+        // دریافت اطلاعات API
+        var apiData = await pluginDependenciesService.GetDependencyApiDataAsync(new[] { "plugin-a", "plugin-b" });
+        foreach (var data in apiData)
+        {
+            Console.WriteLine($"Plugin: {data.Key}, Name: {data.Value.Name}");
+        }
+
+        // بررسی وابستگی‌های چرخشی
+        var hasCircularDependency = pluginDependenciesService.HasCircularDependency("plugin-a");
+        Console.WriteLine($"Has Circular Dependency: {hasCircularDependency}");
+    }
+}
