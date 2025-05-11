@@ -1,0 +1,22 @@
+var dbContext = new AppDbContext();
+var httpService = new HttpService(dbContext);
+
+// ارسال درخواست HTTP
+var url = "https://example.com";
+var headers = new Dictionary<string, string>
+{
+    { "Accept", "application/json" }
+};
+var useragent = "CustomUserAgent/1.0";
+
+var response = await httpService.FetchRemoteFileAsync(url, timeout: 10, headers: headers, useragent: useragent);
+
+Console.WriteLine($"Status Code: {response.StatusCode}");
+Console.WriteLine($"Body: {response.Body}");
+
+// خواندن تمام پاسخ‌ها
+var allResponses = httpService.GetAllResponses();
+foreach (var resp in allResponses)
+{
+    Console.WriteLine($"URL: {resp.Url}, Status Code: {resp.StatusCode}");
+}

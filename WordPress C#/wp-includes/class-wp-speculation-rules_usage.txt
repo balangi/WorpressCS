@@ -1,0 +1,31 @@
+var speculationRulesService = new SpeculationRulesService();
+
+// اضافه کردن یک قانون
+var rule = new Dictionary<string, object>
+{
+    { "where", new Dictionary<string, string> { { "selector", "a.nav-link" } } },
+    { "eagerness", "eager" }
+};
+
+bool success = speculationRulesService.AddRule("prefetch", "rule1", rule);
+
+if (success)
+{
+    Console.WriteLine("Rule added successfully.");
+}
+else
+{
+    Console.WriteLine("Failed to add rule.");
+}
+
+// دریافت داده‌ها به صورت JSON
+var jsonData = speculationRulesService.GetJsonData();
+
+foreach (var mode in jsonData.Keys)
+{
+    Console.WriteLine($"Mode: {mode}");
+    foreach (var ruleData in jsonData[mode])
+    {
+        Console.WriteLine($"Rule Data: {string.Join(", ", ruleData.Select(kv => $"{kv.Key}: {kv.Value}"))}");
+    }
+}

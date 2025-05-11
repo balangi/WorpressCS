@@ -1,0 +1,33 @@
+var dbContext = new AppDbContext();
+var stylesService = new StylesService(dbContext);
+
+// ثبت یک استایل جدید
+stylesService.RegisterStyle(
+    handle: "main-style",
+    src: "/css/main.css",
+    version: "1.0",
+    media: "all",
+    extraData: new Dictionary<string, string>
+    {
+        { "rtl", "true" },
+        { "title", "Main Style" }
+    }
+);
+
+// افزودن وابستگی به یک استایل
+stylesService.AddDependency("main-style", "reset-style");
+
+// دریافت تمام استایل‌ها
+var allStyles = stylesService.GetAllStyles();
+
+foreach (var style in allStyles)
+{
+    Console.WriteLine($"Handle: {style.Handle}, Src: {style.Src}");
+    foreach (var dependency in style.Dependencies)
+    {
+        Console.WriteLine($"  Dependency: {dependency.DependencyHandle}");
+    }
+}
+
+// حذف یک استایل
+stylesService.DeregisterStyle("main-style");

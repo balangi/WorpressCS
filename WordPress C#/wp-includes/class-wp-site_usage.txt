@@ -1,0 +1,38 @@
+var dbContext = new AppDbContext();
+var siteService = new SiteService(dbContext);
+
+// ایجاد یک سایت جدید
+var newSite = new Site
+{
+    BlogId = 1,
+    Domain = "example.com",
+    Path = "/",
+    NetworkId = 1,
+    Registered = DateTime.UtcNow,
+    LastUpdated = DateTime.UtcNow,
+    IsPublic = true,
+    IsArchived = false,
+    IsMature = false,
+    IsSpam = false,
+    IsDeleted = false,
+    LanguageId = 1
+};
+siteService.CreateSite(newSite);
+
+// دریافت اطلاعات یک سایت
+var site = siteService.GetSiteById(1);
+Console.WriteLine($"Site Name: {site.Details?.BlogName}, URL: {site.Details?.SiteUrl}");
+
+// به‌روزرسانی اطلاعات اضافی یک سایت
+var updatedDetails = new SiteDetails
+{
+    BlogId = 1,
+    BlogName = "Updated Site Name",
+    SiteUrl = "https://updated-example.com",
+    PostCount = 100,
+    Home = "/"
+};
+siteService.SetSiteDetails(1, updatedDetails);
+
+// حذف یک سایت
+siteService.DeleteSite(1);

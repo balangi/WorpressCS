@@ -1,0 +1,41 @@
+var dbContext = new AppDbContext();
+var taxonomyService = new TaxonomyService(dbContext);
+
+// ثبت یک Taxonomy جدید
+var args = new Dictionary<string, object>
+{
+    { "public", true },
+    { "hierarchical", true },
+    { "show_in_menu", true },
+    { "rewrite_slug", "categories" }
+};
+
+bool success = taxonomyService.RegisterTaxonomy(
+    name: "category",
+    label: "Categories",
+    description: "A taxonomy for categorizing posts.",
+    args: args
+);
+
+if (success)
+{
+    Console.WriteLine("Taxonomy registered successfully.");
+}
+
+// افزودن داده‌های متا
+taxonomyService.AddMeta(1, "default_term", "Uncategorized");
+
+// دریافت تمام Taxonomy‌ها
+var allTaxonomies = taxonomyService.GetAllTaxonomies();
+
+foreach (var taxonomy in allTaxonomies)
+{
+    Console.WriteLine($"Name: {taxonomy.Name}, Label: {taxonomy.Label}");
+    foreach (var meta in taxonomy.MetaData)
+    {
+        Console.WriteLine($"  Meta: {meta.MetaKey} = {meta.MetaValue}");
+    }
+}
+
+// حذف یک Taxonomy
+taxonomyService.DeleteTaxonomy("category");

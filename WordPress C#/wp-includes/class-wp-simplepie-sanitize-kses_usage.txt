@@ -1,0 +1,9 @@
+var dbContext = new AppDbContext();
+var sanitizationService = new SanitizationService(dbContext);
+
+// پاک‌سازی داده‌ها
+var originalData = "<script>alert('XSS');</script><p>Hello, World!</p>";
+var sanitizedData = sanitizationService.Sanitize(originalData, ConstructType.HTML);
+
+Console.WriteLine($"Original Data: {originalData}");
+Console.WriteLine($"Sanitized Data: {sanitizedData}");

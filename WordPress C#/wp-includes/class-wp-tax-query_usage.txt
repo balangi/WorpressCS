@@ -1,0 +1,32 @@
+var dbContext = new AppDbContext();
+var taxQueryService = new TaxQueryService(dbContext);
+
+// تعریف شرط‌ها
+var clauses = new List<TaxQueryClause>
+{
+    new TaxQueryClause
+    {
+        Taxonomy = "category",
+        Terms = new List<int> { 1, 2, 3 },
+        Field = "term_id",
+        Operator = "IN",
+        IncludeChildren = true
+    },
+    new TaxQueryClause
+    {
+        Taxonomy = "tag",
+        Terms = new List<int> { 4, 5 },
+        Field = "term_id",
+        Operator = "NOT IN",
+        IncludeChildren = false
+    }
+};
+
+// اجرای Tax Query
+var objectIds = taxQueryService.ExecuteTaxQuery(clauses, "AND").ToList();
+
+Console.WriteLine("Object IDs:");
+foreach (var id in objectIds)
+{
+    Console.WriteLine(id);
+}

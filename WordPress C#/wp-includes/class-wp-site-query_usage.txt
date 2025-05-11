@@ -1,0 +1,24 @@
+var dbContext = new AppDbContext();
+var siteQueryService = new SiteQueryService(dbContext);
+
+// تنظیم پارامترهای پرس‌وجو
+var parameters = new SiteQueryParameters
+{
+    Domain = "example.com",
+    IsPublic = true,
+    OrderBy = "domain",
+    Order = "asc",
+    Limit = 50
+};
+
+// دریافت لیست سایت‌ها
+var sites = siteQueryService.GetSites(parameters);
+
+// دریافت تعداد کل سایت‌ها
+var totalSites = siteQueryService.GetTotalSitesCount(parameters);
+
+Console.WriteLine($"Total Sites: {totalSites}");
+foreach (var site in sites)
+{
+    Console.WriteLine($"Site ID: {site.BlogId}, Domain: {site.Domain}, Path: {site.Path}");
+}
