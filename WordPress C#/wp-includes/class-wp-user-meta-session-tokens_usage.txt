@@ -1,0 +1,21 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد نمونه از کلاس WP_User_Meta_Session_Tokens برای کاربر با ID 1
+        var sessionManager = new WP_User_Meta_Session_Tokens(1);
+
+        // دریافت تمام جلسات کاربر
+        var sessions = sessionManager.GetSessions();
+
+        Console.WriteLine("Active Sessions:");
+        foreach (var session in sessions)
+        {
+            Console.WriteLine($"Token: {session.Key}, Expiration: {session.Value.Expiration}");
+        }
+
+        // حذف تمام جلسات کاربر
+        sessionManager.DestroyAllSessions();
+        Console.WriteLine("All sessions have been destroyed.");
+    }
+}

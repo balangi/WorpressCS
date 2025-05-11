@@ -1,0 +1,24 @@
+var dbContext = new AppDbContext();
+var themeService = new ThemeService(dbContext);
+
+// ثبت یک Theme جدید
+themeService.RegisterTheme("my-theme", "/path/to/themes");
+
+// دریافت یک Theme بر اساس نام
+var theme = themeService.GetThemeByName("my-theme");
+
+if (theme != null)
+{
+    Console.WriteLine($"Theme Name: {theme.Name}");
+    foreach (var header in theme.Headers)
+    {
+        Console.WriteLine($"Header: {header.Key} = {header.Value}");
+    }
+    foreach (var template in theme.Templates)
+    {
+        Console.WriteLine($"Template File: {template.FilePath}");
+    }
+}
+
+// حذف یک Theme
+themeService.DeleteTheme("my-theme");

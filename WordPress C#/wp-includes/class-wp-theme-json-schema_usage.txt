@@ -1,0 +1,52 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // داده‌های ورودی
+        var themeJson = new Dictionary<string, object>
+        {
+            { "version", 1 },
+            { "settings", new Dictionary<string, object>
+                {
+                    { "border", new Dictionary<string, object>
+                        {
+                            { "customRadius", "10px" }
+                        }
+                    },
+                    { "spacing", new Dictionary<string, object>
+                        {
+                            { "customMargin", "20px" }
+                        }
+                    }
+                }
+            }
+        };
+
+        // مهاجرت داده‌ها
+        var migratedData = WP_Theme_JSON_Schema.Migrate(themeJson, "theme");
+
+        // نمایش داده‌های مهاجرت‌شده
+        Console.WriteLine("Migrated Data:");
+        PrintDictionary(migratedData);
+    }
+
+    // چاپ داده‌های دیکشنری
+    static void PrintDictionary(Dictionary<string, object> dict, int indent = 0)
+    {
+        foreach (var entry in dict)
+        {
+            Console.Write(new string(' ', indent * 2));
+            Console.Write(entry.Key + ": ");
+
+            if (entry.Value is Dictionary<string, object> nestedDict)
+            {
+                Console.WriteLine();
+                PrintDictionary(nestedDict, indent + 1);
+            }
+            else
+            {
+                Console.WriteLine(entry.Value);
+            }
+        }
+    }
+}

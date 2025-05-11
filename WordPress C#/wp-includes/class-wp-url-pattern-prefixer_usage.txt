@@ -1,0 +1,42 @@
+using System;
+using System.Collections.Generic;
+
+namespace WordPress.SpeculativeLoading
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // تعریف مسیرهای پیش‌فرض برای زمینه‌ها (contexts)
+            var customContexts = new Dictionary<string, string>
+            {
+                { "home", "/wordpress/" },
+                { "site", "/wordpress/site/" },
+                { "uploads", "/wordpress/wp-content/uploads/" },
+                { "content", "/wordpress/wp-content/" },
+                { "plugins", "/wordpress/wp-content/plugins/" },
+                { "template", "/wordpress/wp-content/themes/template/" },
+                { "stylesheet", "/wordpress/wp-content/themes/stylesheet/" }
+            };
+
+            // ایجاد نمونه از کلاس WPUrlPatternPrefixer با مسیرهای سفارشی
+            var urlPatternPrefixer = new WPUrlPatternPrefixer(customContexts);
+
+            // الگوی URL ورودی
+            string pathPattern = "example-path";
+
+            // پیشوند دادن به الگوی URL با استفاده از زمینه "home"
+            string prefixedPath = urlPatternPrefixer.PrefixPathPattern(pathPattern, "home");
+
+            // نمایش نتیجه
+            Console.WriteLine("Prefixed Path: " + prefixedPath);
+
+            // تست با زمینه‌های مختلف
+            string uploadsPath = urlPatternPrefixer.PrefixPathPattern("image.jpg", "uploads");
+            Console.WriteLine("Prefixed Uploads Path: " + uploadsPath);
+
+            string pluginsPath = urlPatternPrefixer.PrefixPathPattern("plugin.js", "plugins");
+            Console.WriteLine("Prefixed Plugins Path: " + pluginsPath);
+        }
+    }
+}

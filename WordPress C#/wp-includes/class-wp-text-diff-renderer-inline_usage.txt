@@ -1,0 +1,21 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد نمونه از کلاس
+        var renderer = new WP_Text_Diff_Renderer_Inline();
+
+        // متن ورودی
+        string input = "Hello, world!\nThis is a test.";
+
+        // فراخوانی متد SplitOnWords
+        var result = renderer.SplitOnWords(input, "\\n");
+
+        // نمایش نتیجه
+        Console.WriteLine("Split Words:");
+        foreach (var word in result)
+        {
+            Console.WriteLine($"'{word}'");
+        }
+    }
+}

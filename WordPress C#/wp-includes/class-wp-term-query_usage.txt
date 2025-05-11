@@ -1,0 +1,25 @@
+var dbContext = new AppDbContext();
+var termQueryService = new TermQueryService(dbContext);
+
+// تنظیم پارامترهای Query
+var parameters = new TermQueryParameters
+{
+    Taxonomy = "category",
+    Include = new List<int> { 1, 2, 3 },
+    Exclude = new List<int> { 4, 5 },
+    OrderBy = "name",
+    Order = "asc",
+    Limit = 50
+};
+
+// دریافت لیست Term‌ها
+var terms = termQueryService.GetTerms(parameters);
+
+// دریافت تعداد کل Term‌ها
+var totalTerms = termQueryService.GetTotalTermsCount(parameters);
+
+Console.WriteLine($"Total Terms: {totalTerms}");
+foreach (var term in terms)
+{
+    Console.WriteLine($"Term ID: {term.TermId}, Name: {term.Name}, Slug: {term.Slug}");
+}

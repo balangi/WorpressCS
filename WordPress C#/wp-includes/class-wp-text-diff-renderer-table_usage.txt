@@ -1,0 +1,19 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد نمونه از کلاس
+        var renderer = new WP_Text_Diff_Renderer_Table();
+
+        // متن اصلی و نهایی
+        var original = new List<string> { "Hello", "world", "this", "is", "a", "test" };
+        var modified = new List<string> { "Hello", "world", "this", "is", "an", "example" };
+
+        // رندر کردن تفاوت‌ها
+        var diffHtml = renderer.RenderDiff(original, modified);
+
+        // نمایش نتیجه
+        Console.WriteLine("Diff HTML:");
+        Console.WriteLine(diffHtml);
+    }
+}

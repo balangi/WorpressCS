@@ -1,0 +1,24 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد نمونه از کلاس WP_User_Query
+        var queryVars = new Dictionary<string, object>
+        {
+            { "search", "admin" },
+            { "orderby", "user_login" },
+            { "order", "ASC" },
+            { "number", 10 }
+        };
+
+        var userQuery = new WP_User_Query(queryVars);
+
+        // نمایش نتایج
+        Console.WriteLine("Total Users: " + userQuery.TotalUsers);
+        foreach (var result in userQuery.Results)
+        {
+            var user = result as User;
+            Console.WriteLine($"ID: {user.ID}, Login: {user.UserLogin}, Email: {user.UserEmail}");
+        }
+    }
+}

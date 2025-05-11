@@ -1,0 +1,43 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // شبیه‌سازی یک پست
+        var post = new Post
+        {
+            ID = 1,
+            AuthorID = 123,
+            Title = "user@example.com",
+            Slug = "export_personal_data",
+            Status = "pending",
+            CreatedDate = DateTime.UtcNow.AddDays(-1),
+            ModifiedDate = DateTime.UtcNow,
+            Content = "{\"reason\":\"data_export\",\"details\":\"some_details\"}",
+            Password = "hashed_key",
+            MetaData = new List<MetaData>
+            {
+                new MetaData { Key = "_wp_user_request_confirmed_timestamp", Value = "1698745600" },
+                new MetaData { Key = "_wp_user_request_completed_timestamp", Value = "1698750000" }
+            }
+        };
+
+        // ایجاد نمونه از کلاس WP_User_Request
+        var userRequest = new WP_User_Request(post);
+
+        // نمایش اطلاعات درخواست
+        Console.WriteLine($"ID: {userRequest.ID}");
+        Console.WriteLine($"User ID: {userRequest.UserID}");
+        Console.WriteLine($"Email: {userRequest.Email}");
+        Console.WriteLine($"Action Name: {userRequest.ActionName}");
+        Console.WriteLine($"Status: {userRequest.Status}");
+        Console.WriteLine($"Created Timestamp: {userRequest.CreatedTimestamp}");
+        Console.WriteLine($"Confirmed Timestamp: {userRequest.ConfirmedTimestamp}");
+        Console.WriteLine($"Completed Timestamp: {userRequest.CompletedTimestamp}");
+        Console.WriteLine("Request Data:");
+        foreach (var data in userRequest.RequestData)
+        {
+            Console.WriteLine($"  {data.Key}: {data.Value}");
+        }
+        Console.WriteLine($"Confirm Key: {userRequest.ConfirmKey}");
+    }
+}

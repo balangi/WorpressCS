@@ -1,0 +1,22 @@
+var dbContext = new AppDbContext();
+var textDomainService = new TextDomainService(dbContext);
+
+// ثبت یک Text Domain جدید
+textDomainService.RegisterTextDomain("my-plugin", "en_US", "/path/to/custom/languages");
+
+// دریافت مسیر زبان
+var languagePath = textDomainService.GetLanguageDirectoryPath("my-plugin", "en_US");
+Console.WriteLine($"Language Directory Path: {languagePath}");
+
+// افزودن فایل ترجمه
+textDomainService.AddTranslationFile("my-plugin", "en_US", "/path/to/my-plugin-en_US.mo");
+
+// دریافت تمام فایل‌های ترجمه
+var translationFiles = textDomainService.GetTranslationFiles("my-plugin", "en_US");
+foreach (var file in translationFiles)
+{
+    Console.WriteLine($"Translation File: {file}");
+}
+
+// غیرفعال کردن کش فایل‌های MO
+textDomainService.InvalidateMoFilesCache();

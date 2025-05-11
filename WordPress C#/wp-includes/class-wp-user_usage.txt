@@ -1,0 +1,30 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        try
+        {
+            // ایجاد نمونه از کلاس WP_User با شناسه کاربر
+            var user = new WP_User(1);
+
+            // نمایش اطلاعات کاربر
+            Console.WriteLine($"User ID: {user.ID}");
+            Console.WriteLine($"Username: {user.Get("Username")}");
+            Console.WriteLine($"Email: {user.Get("Email")}");
+
+            // نمایش قابلیت‌های کاربر
+            Console.WriteLine("Capabilities:");
+            foreach (var cap in user.AllCaps)
+            {
+                Console.WriteLine($"{cap.Key}: {cap.Value}");
+            }
+
+            // بروزرسانی سطح کاربر
+            user.UpdateUserLevelFromCaps();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}

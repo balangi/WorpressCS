@@ -1,0 +1,27 @@
+var dbContext = new AppDbContext();
+var termService = new TermService(dbContext);
+
+// دریافت یک Term بر اساس شناسه
+try
+{
+    var term = termService.GetTermById(1, "category");
+    if (term != null)
+    {
+        Console.WriteLine($"Term Name: {term.Name}, Taxonomy: {term.Taxonomy}");
+    }
+    else
+    {
+        Console.WriteLine("Term not found.");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+
+// سانیتایز کردن داده‌ها
+var sanitizedTerm = termService.SanitizeTerm(term, "display");
+
+// تبدیل Term به آرایه
+var termArray = termService.ToArray(term);
+Console.WriteLine(termArray);

@@ -1,0 +1,63 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // داده‌های JSON مورد نظر
+        var themeJson = new Dictionary<string, object>
+        {
+            { "settings", new Dictionary<string, object>
+                {
+                    { "spacing", new Dictionary<string, object>
+                        {
+                            { "spacingScale", new Dictionary<string, object>
+                                {
+                                    { "steps", 5 },
+                                    { "increment", 4 },
+                                    { "unit", "px" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // ایجاد نمونه از کلاس
+        var themeJsonProcessor = new WP_Theme_JSON(themeJson);
+
+        // محاسبه اندازه‌های فاصله‌گذاری
+        var spacingScale = themeJsonProcessor.GetPropertyValue(new[] { "settings", "spacing", "spacingScale" }) as Dictionary<string, object>;
+        var spacingSizes = themeJsonProcessor.ComputeSpacingSizes(spacingScale);
+
+        Console.WriteLine("Computed Spacing Sizes:");
+        foreach (var size in spacingSizes)
+        {
+            Console.WriteLine($"Slug: {size["slug"]}, Size: {size["size"]}");
+        }
+
+        // حذف مقادیر غیرمجاز
+        var sanitizedThemeJson = themeJsonProcessor.RemoveInsecureProperties(themeJsonProcessor.GetRawData());
+        Console.WriteLine("\nSanitized Theme JSON:");
+        PrintDictionary(sanitizedThemeJson);
+    }
+
+    // چاپ داده‌های دیکشنری
+    static void PrintDictionary(Dictionary<string, object> dict, int indent = 0)
+    {
+        foreach (var entry in dict)
+        {
+            Console.Write(new string(' ', indent * 2));
+            Console.Write(entry.Key + ": ");
+
+            if (entry.Value is Dictionary<string, object> nestedDict)
+            {
+                Console.WriteLine();
+                PrintDictionary(nestedDict, indent + 1);
+            }
+            else
+            {
+                Console.WriteLine(entry.Value);
+            }
+        }
+    }
+}

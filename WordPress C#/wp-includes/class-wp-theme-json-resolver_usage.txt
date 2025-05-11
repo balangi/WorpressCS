@@ -1,0 +1,32 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // دریافت داده‌های ادغام‌شده
+        var mergedData = WP_Theme_JSON_Resolver.GetMergedData();
+
+        // نمایش داده‌ها
+        Console.WriteLine("Merged Data:");
+        PrintDictionary(mergedData.GetRawData());
+    }
+
+    // چاپ داده‌های دیکشنری
+    static void PrintDictionary(Dictionary<string, object> dict, int indent = 0)
+    {
+        foreach (var entry in dict)
+        {
+            Console.Write(new string(' ', indent * 2));
+            Console.Write(entry.Key + ": ");
+
+            if (entry.Value is Dictionary<string, object> nestedDict)
+            {
+                Console.WriteLine();
+                PrintDictionary(nestedDict, indent + 1);
+            }
+            else
+            {
+                Console.WriteLine(entry.Value);
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // ایجاد یک نگاشت توکن از آرایه
+        var smilies = WP_Token_Map.FromArray(new Dictionary<string, string>
+        {
+            { "8O", "😯" },
+            { ":(", "🙁" },
+            { ":)", "🙂" },
+            { ":?", "😕" }
+        });
+
+        // بررسی وجود توکن
+        Console.WriteLine(smilies.Contains(":)")); // true
+        Console.WriteLine(smilies.Contains("simile")); // false
+
+        // خواندن توکن از متن
+        int length;
+        var result = smilies.ReadToken("Not sure :?.", 9, out length);
+        Console.WriteLine(result); // 😕
+        Console.WriteLine(length); // 2
+
+        // صادر کردن جدول پیش‌محاسبه‌شده
+        var phpCode = smilies.PrecomputedPhpSourceTable();
+        Console.WriteLine(phpCode);
+    }
+}

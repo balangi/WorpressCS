@@ -1,0 +1,56 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Initialize with default data
+        var initialData = new Dictionary<string, object>
+        {
+            { "version", WP_Theme_JSON.LatestSchema },
+            { "settings", new Dictionary<string, object>
+                {
+                    { "color", new Dictionary<string, object>
+                        {
+                            { "palette", new List<Dictionary<string, string>>
+                                {
+                                    new Dictionary<string, string> { { "slug", "primary" }, { "color", "#0073aa" } }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        var themeJsonData = new WP_Theme_JSON_Data(initialData, "theme");
+
+        // Update with new data
+        var newData = new Dictionary<string, object>
+        {
+            { "settings", new Dictionary<string, object>
+                {
+                    { "color", new Dictionary<string, object>
+                        {
+                            { "palette", new List<Dictionary<string, string>>
+                                {
+                                    new Dictionary<string, string> { { "slug", "secondary" }, { "color", "#ff0000" } }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        themeJsonData.UpdateWith(newData);
+
+        // Get updated data
+        var updatedData = themeJsonData.GetData();
+
+        // Print updated data
+        Console.WriteLine("Updated Data:");
+        foreach (var item in updatedData)
+        {
+            Console.WriteLine($"{item.Key}: {item.Value}");
+        }
+    }
+}
