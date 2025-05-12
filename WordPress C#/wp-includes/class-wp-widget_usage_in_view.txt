@@ -1,0 +1,15 @@
+@inject RecentPostsWidget recentPostsWidget
+
+@{
+    var args = new Dictionary<string, object>
+    {
+        {"before_title", "<h3>"},
+        {"after_title", "</h3>"}
+    };
+    var instance = new Dictionary<string, object>
+    {
+        {"title", "Latest News"}
+    };
+
+    recentPostsWidget.Widget(Html, args, instance);
+}

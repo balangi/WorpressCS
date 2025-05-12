@@ -1,0 +1,18 @@
+class Program
+{
+    static void Main()
+    {
+        var items = new List<MenuItem>
+        {
+            new MenuItem { Id = 1, ParentId = null, Name = "Home" },
+            new MenuItem { Id = 2, ParentId = null, Name = "Services" },
+            new MenuItem { Id = 3, ParentId = 2, Name = "Web Design" },
+            new MenuItem { Id = 4, ParentId = 2, Name = "SEO" },
+            new MenuItem { Id = 5, ParentId = null, Name = "Contact" }
+        };
+
+        var walker = new MenuWalker();
+        var html = walker.Walk(items, maxDepth: 0); // 0 means unlimited depth
+        Console.WriteLine(html);
+    }
+}

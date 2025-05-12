@@ -1,0 +1,10 @@
+@inject ICommentService CommentService
+
+@foreach (var comment in await CommentService.GetCommentsByPostId(1))
+{
+    <div class="comment">
+        <h4>@comment.Author</h4>
+        <p>@comment.Content</p>
+        <small>@comment.Date.ToShortDateString()</small>
+    </div>
+}

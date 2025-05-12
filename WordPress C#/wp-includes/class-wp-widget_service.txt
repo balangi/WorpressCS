@@ -1,0 +1,43 @@
+public class WidgetService : IWidgetService
+{
+    private readonly ApplicationDbContext _context;
+
+    public WidgetService(ApplicationDbContext context) => _context = context;
+
+    public async Task<List<WidgetSettings>> GetWidgetSettingsAsync(string widgetIdBase)
+    {
+        return await _context.WidgetSettings
+            .Where(w => w.WidgetId.StartsWith(widgetIdBase + "-"))
+            .ToListAsync();
+    }
+
+    public async Task<Dictionary<string, object>> GetSettingsAsync(string widgetId)
+    {
+        var settings = await _context.WidgetSettings
+            .FirstOrDefaultAsync(w => w.WidgetId == widgetId);
+
+        return settings?.Settings ?? new Dictionary<string, object>();
+    }
+
+    public async Task SaveSettingsAsync(string widgetId, Dictionary<string, object> settings)
+    {
+        var existing = await _context.WidgetSettings
+            .FirstOrDefaultAsync(w => w.WidgetId == widgetId);
+
+        if (existing == null)
+        {
+            await _context.WidgetSettings.AddAsync(new WidgetSettings
+            {
+                WidgetId = widgetId,
+                Settings = settings
+            });
+        }
+        else
+        {
+            existing.Settings = settings;
+            _context.WidgetSettings.Update(existing);
+        }
+
+        await _context.SaveChangesAsync();
+    }
+}
