@@ -1,0 +1,21 @@
+@inject ICommentTemplateService CommentTemplateService
+
+@foreach (var comment in Model.Comments)
+{
+    <div class="comment">
+        <h4>@await CommentTemplateService.GetCommentAuthorLinkAsync(comment.Id)</h4>
+        <p>@await CommentTemplateService.GetCommentContentAsync(comment.Id)</p>
+        <small>
+            Posted on @await CommentTemplateService.GetCommentDateAsync(comment.Id)
+            at @await CommentTemplateService.GetCommentTimeAsync(comment.Id)
+        </small>
+    </div>
+}
+
+<div class="comment-list">
+    @Html.Raw(await CommentTemplateService.RenderCommentListAsync(Model.Comments, Model.Post.Id))
+</div>
+
+<div class="comment-form">
+    @Html.Raw(CommentTemplateService.RenderCommentForm(Model.Post.Id))
+</div>

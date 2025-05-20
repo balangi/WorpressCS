@@ -1,0 +1,34 @@
+[ApiController]
+[Route("[controller]")]
+public class CronController : ControllerBase
+{
+    private readonly ICronService _cronService;
+
+    public CronController(ICronService cronService) => _cronService = cronService;
+
+    [HttpPost("schedule")]
+    public async Task<IActionResult> Schedule()
+    {
+        var args = new Dictionary<string, object>
+        {
+            {"message", "This is a test cron event"}
+        };
+
+        await _cronService.ScheduleSingleEventAsync("test_cron", DateTime.UtcNow.AddSeconds(10), args);
+        return Ok(new { message = "Test cron scheduled for 10 seconds from now." });
+    }
+
+    [HttpPost("recurring")]
+    public async Task<IActionResult> Recurring()
+    {
+        await _cronService.ScheduleRecurringEventAsync("test_cron", "hourly", DateTime.UtcNow.AddMinutes(1));
+        return Ok(new { message = "Recurring hourly cron scheduled." });
+    }
+
+    [HttpPost("run")]
+    public async Task<IActionResult> Run()
+    {
+        var result = await _cronService.RunScheduledJobsAsync();
+        return Ok(new { success = result });
+    }
+}

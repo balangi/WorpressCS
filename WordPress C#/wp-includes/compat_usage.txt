@@ -1,0 +1,36 @@
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine(Polyfills.StrContains("Hello World", "World")); // True
+        Console.WriteLine(Polyfills.StrStartsWith("Hello World", "He")); // True
+        Console.WriteLine(Polyfills.StrEndsWith("Hello World", "ld")); // True
+
+        var dict = new Dictionary<string, int>
+        {
+            { "one", 1 },
+            { "two", 2 }
+        };
+
+        Console.WriteLine(Polyfills.ArrayKeyFirst(dict)); // one
+        Console.WriteLine(Polyfills.ArrayKeyLast(dict));  // two
+
+        var list = new List<int> { 1, 2, 3 };
+        Console.WriteLine(Polyfills.IsCountable(list)); // True
+
+        Console.WriteLine(Polyfills.MbStrlen("سلام دنیا")); // 12 (UTF-8 byte count)
+
+        var arr = new List<string> { "a", "b", "c" };
+        var found = Polyfills.ArrayFind(arr, x => x == "b");
+        Console.WriteLine(found); // b
+
+        var result = Polyfills.ArrayAny(arr, x => x == "c");
+        Console.WriteLine(result); // True
+
+        var allAreStrings = Polyfills.ArrayAll(arr, x => x is string);
+        Console.WriteLine(allAreStrings); // True
+
+        Console.WriteLine(Polyfills.IsUtf8Charset("UTF-8")); // True
+        Console.WriteLine(Polyfills.IsUtf8Charset("latin1")); // False
+    }
+}
