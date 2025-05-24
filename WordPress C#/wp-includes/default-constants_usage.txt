@@ -1,0 +1,13 @@
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine($"WP_CONTENT_DIR: {WordPressConstants.WP_CONTENT_DIR}");
+        Console.WriteLine($"WP_PLUGIN_DIR: {WordPressConstants.WP_PLUGIN_DIR}");
+        Console.WriteLine($"YEAR_IN_SECONDS: {WordPressConstants.YEAR_IN_SECONDS}");
+
+        string siteUrl = "https://example.com ";
+        string cookieHash = CookieHashHelper.GetCookieHash(siteUrl);
+        Console.WriteLine($"COOKIEHASH for {siteUrl}: {cookieHash}");
+    }
+}
