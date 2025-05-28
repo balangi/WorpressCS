@@ -1,0 +1,15 @@
+@inject IEmbedService EmbedService
+
+@if (!string.IsNullOrEmpty(ViewBag.EmbedUrl))
+{
+    @{
+        var data = await EmbedService.GetEmbedDataAsync(ViewBag.EmbedUrl);
+        var html = await EmbedService.RenderEmbedHtmlAsync(data);
+    }
+
+    @Html.Raw(html)
+}
+else
+{
+    <p>No URL provided.</p>
+}

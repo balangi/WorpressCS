@@ -1,0 +1,20 @@
+@inject IDeprecatedService DeprecatedService
+
+@foreach (var func in DeprecatedService.GetAll())
+{
+    <div>
+        <strong>@func.Name</strong> 
+        <em>(Deprecated in @func.VersionDeprecated)</em>
+        <p>Use: @func.Replacement</p>
+    </div>
+}
+
+@try
+{
+    // مثال فراخوانی تابع قدیمی
+    Html.GetTheAuthorLogin();
+}
+catch (NotSupportedException ex)
+{
+    <div class="alert alert-danger">@ex.Message</div>
+}

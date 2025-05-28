@@ -1,0 +1,19 @@
+@inject IErrorService ErrorService
+@inject RecoveryModeService RecoveryMode
+
+@if (RecoveryMode.InRecoveryMode())
+{
+    <div class="alert alert-danger">
+        You are currently in Recovery Mode.
+    </div>
+}
+
+<h3>Recent Errors:</h3>
+<ul>
+    @foreach (var error in await ErrorService.GetRecentErrors(5))
+    {
+        <li>
+            <strong>@error.ErrorType</strong> in @error.File (@error.Line)
+        </li>
+    }
+</ul>

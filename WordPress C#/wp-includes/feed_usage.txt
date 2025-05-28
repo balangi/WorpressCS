@@ -1,0 +1,11 @@
+var context = new ApplicationDbContext();
+var feedService = new FeedService(context);
+
+// Get the RSS title for a post
+string rssTitle = feedService.GetPostTitleRss(1);
+
+// Get the RSS content for a post
+string rssContent = feedService.GetPostContentFeed(1);
+
+Console.WriteLine($"RSS Title: {rssTitle}");
+Console.WriteLine($"RSS Content: {rssContent}");
