@@ -1,0 +1,6 @@
+var context = new ApplicationDbContext();
+var atomFeedService = new AtomFeedService(context);
+
+string atomFeedXml = atomFeedService.GenerateAtomFeed();
+
+Console.WriteLine(atomFeedXml);
