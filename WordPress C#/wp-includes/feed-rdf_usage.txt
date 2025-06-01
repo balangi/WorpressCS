@@ -1,0 +1,6 @@
+var context = new ApplicationDbContext();
+var rdfFeedService = new RdfFeedService(context);
+
+string rdfFeedXml = rdfFeedService.GenerateRdfFeed();
+
+Console.WriteLine(rdfFeedXml);

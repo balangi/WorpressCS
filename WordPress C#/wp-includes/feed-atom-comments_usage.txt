@@ -1,0 +1,6 @@
+var context = new ApplicationDbContext();
+var atomCommentsFeedService = new AtomCommentsFeedService(context);
+
+string atomCommentsFeedXml = atomCommentsFeedService.GenerateAtomCommentsFeed();
+
+Console.WriteLine(atomCommentsFeedXml);
