@@ -1,0 +1,6 @@
+var context = new ApplicationDbContext();
+var rss2FeedService = new Rss2FeedService(context);
+
+string rss2FeedXml = rss2FeedService.GenerateRss2Feed();
+
+Console.WriteLine(rss2FeedXml);
