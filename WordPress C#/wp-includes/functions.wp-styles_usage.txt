@@ -1,0 +1,22 @@
+var styleService = new StyleService();
+
+// Initialize the style registry
+styleService.InitializeStyles();
+
+// Register a style
+styleService.RegisterStyle("bootstrap", "/css/bootstrap.css", new List<string>(), "5.3.0", "screen");
+
+// Add inline style
+styleService.AddInlineStyle("bootstrap", ".custom-class { color: red; }");
+
+// Enqueue a style
+styleService.EnqueueStyle("bootstrap");
+
+// Add metadata to a style
+styleService.AddStyleMetadata("bootstrap", "conditional", "IE 6");
+
+// Print all styles
+styleService.PrintStyles();
+
+// Deregister a style
+styleService.DeregisterStyle("bootstrap");

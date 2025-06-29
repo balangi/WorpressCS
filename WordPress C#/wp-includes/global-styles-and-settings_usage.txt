@@ -1,0 +1,14 @@
+var context = new ApplicationDbContext();
+var globalService = new GlobalStylesAndSettingsService(context);
+
+// Get global settings
+var settings = globalService.GetGlobalSettings(new List<string> { "color" });
+Console.WriteLine(settings);
+
+// Get global styles
+var styles = globalService.GetGlobalStyles(new List<string> { "blocks", "core/paragraph" });
+Console.WriteLine(styles);
+
+// Generate global stylesheet
+var stylesheet = globalService.GenerateGlobalStylesheet(new List<string> { "variables", "presets" });
+Console.WriteLine(stylesheet);

@@ -1,0 +1,14 @@
+var context = new ApplicationDbContext();
+var httpsDetectionService = new HttpsDetectionService(context);
+
+// Check if the site is using HTTPS
+bool isUsingHttps = httpsDetectionService.IsUsingHttps();
+Console.WriteLine($"Is using HTTPS: {isUsingHttps}");
+
+// Check if HTTPS is supported
+var httpsSupportResult = await httpsDetectionService.IsHttpsSupportedAsync();
+Console.WriteLine($"Is HTTPS supported: {httpsSupportResult.IsHttpsSupported}");
+foreach (var error in httpsSupportResult.Errors)
+{
+    Console.WriteLine($"Error: {error.Code} - {error.Message}");
+}

@@ -1,0 +1,18 @@
+var context = new ApplicationDbContext();
+var httpsMigrationService = new HttpsMigrationService(context);
+
+// Check if insecure URLs should be replaced
+bool shouldReplace = httpsMigrationService.ShouldReplaceInsecureHomeUrl();
+Console.WriteLine($"Should replace insecure URLs: {shouldReplace}");
+
+// Replace insecure URLs in content
+string content = "Visit http://example.com for more information.";
+string updatedContent = httpsMigrationService.ReplaceInsecureHomeUrl(content);
+Console.WriteLine($"Updated content: {updatedContent}");
+
+// Update URLs to HTTPS
+var result = httpsMigrationService.UpdateUrlsToHttps();
+Console.WriteLine($"Update result: {result.Success}, Message: {result.Message}");
+
+// Update HTTPS migration required status
+httpsMigrationService.UpdateHttpsMigrationRequired("http://example.com", "https://example.com ");

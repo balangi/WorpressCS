@@ -1,0 +1,47 @@
+var context = new ApplicationDbContext();
+var fontService = new FontService(context);
+
+// Generate and print font-face styles
+var fonts = new List<FontFace>
+{
+    new FontFace
+    {
+        FontFamily = "Roboto",
+        Src = new List<string> { "/fonts/roboto.woff2", "/fonts/roboto.woff" },
+        FontStyle = "normal",
+        FontWeight = "400"
+    }
+};
+
+string css = fontService.GenerateFontFaceStyles(fonts);
+Console.WriteLine(css);
+
+// Register a font collection
+var collection = new FontCollection
+{
+    Slug = "google-fonts",
+    Name = "Google Fonts",
+    Description = "Install from Google Fonts.",
+    FontFamilies = new List<FontFamily>
+    {
+        new FontFamily
+        {
+            Name = "Roboto",
+            FontFaces = new List<FontFace>
+            {
+                new FontFace
+                {
+                    FontFamily = "Roboto",
+                    Src = new List<string> { "/fonts/roboto.woff2", "/fonts/roboto.woff" },
+                    FontStyle = "normal",
+                    FontWeight = "400"
+                }
+            }
+        }
+    }
+};
+
+fontService.RegisterFontCollection("google-fonts", collection);
+
+// Unregister a font collection
+fontService.UnregisterFontCollection("google-fonts");

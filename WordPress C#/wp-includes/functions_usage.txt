@@ -1,0 +1,32 @@
+var context = new ApplicationDbContext();
+var functionsService = new WordPressFunctionsService(context);
+
+// Convert MySQL date
+string formattedDate = functionsService.ConvertMySqlDate("2023-10-01 12:34:56", "yyyy-MM-ddTHH:mm:ss");
+Console.WriteLine(formattedDate);
+
+// Balance tags
+string balancedText = functionsService.BalanceTags("<div><p>Hello</div>");
+Console.WriteLine(balancedText);
+
+// Validate email
+bool isValidEmail = functionsService.ValidateEmail("example@example.com");
+Console.WriteLine($"Is valid email: {isValidEmail}");
+
+// Handle file upload
+byte[] fileData = File.ReadAllBytes("path/to/file.txt");
+var uploadResult = functionsService.HandleUpload(fileData, "file.txt", "/uploads");
+Console.WriteLine($"Uploaded file: {uploadResult.File}, URL: {uploadResult.Url}, Error: {uploadResult.Error}");
+
+// Build query string
+var queryParams = new Dictionary<string, string>
+{
+    { "key1", "value1" },
+    { "key2", "value2" }
+};
+string queryString = functionsService.BuildQuery(queryParams);
+Console.WriteLine(queryString);
+
+// Check Apache module
+bool isModuleLoaded = functionsService.IsApacheModuleLoaded("mod_rewrite");
+Console.WriteLine($"Is mod_rewrite loaded: {isModuleLoaded}");

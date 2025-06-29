@@ -1,0 +1,28 @@
+var context = new ApplicationDbContext();
+var generalTemplateService = new GeneralTemplateService(context);
+
+// Load a template part
+var templateContent = generalTemplateService.LoadTemplatePart("header", "special");
+Console.WriteLine(templateContent);
+
+// Generate pagination links
+var paginationOptions = new PaginationOptions
+{
+    BaseUrl = "/page/%_%",
+    Format = "?page=%#%",
+    TotalPages = 5,
+    CurrentPage = 3,
+    ShowAll = false,
+    PrevNext = true,
+    PrevText = "&laquo; Previous",
+    NextText = "Next &raquo;"
+};
+var paginationLinks = generalTemplateService.GeneratePaginationLinks(paginationOptions);
+Console.WriteLine(paginationLinks);
+
+// Get feed links
+var feedLinks = generalTemplateService.GetFeedLinks();
+foreach (var feedLink in feedLinks)
+{
+    Console.WriteLine($"Type: {feedLink.Type}, URL: {feedLink.Url}");
+}

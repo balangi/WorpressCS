@@ -1,0 +1,26 @@
+var scriptService = new ScriptService();
+
+// Initialize the script registry
+scriptService.InitializeScripts();
+
+// Register a script
+scriptService.RegisterScript("jquery", "/js/jquery.js", new List<string>(), "3.6.0", true);
+
+// Localize a script
+scriptService.LocalizeScript("jquery", "wpSettings", new Dictionary<string, object>
+{
+    { "siteUrl", "https://example.com"  },
+    { "version", "1.0" }
+});
+
+// Add inline script
+scriptService.AddInlineScript("jquery", "console.log('Inline script added');", "after");
+
+// Enqueue a script
+scriptService.EnqueueScript("jquery");
+
+// Print all scripts
+scriptService.PrintScripts();
+
+// Deregister a script
+scriptService.DeregisterScript("jquery");

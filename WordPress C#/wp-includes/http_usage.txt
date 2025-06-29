@@ -1,0 +1,27 @@
+var httpClient = new HttpClient();
+var httpService = new HttpService(httpClient);
+
+// Create an HTTP request
+var request = new HttpRequest
+{
+    Url = "https://example.com/api/data ",
+    Method = HttpMethod.GET,
+    Headers = new Dictionary<string, string>
+    {
+        { "Authorization", "Bearer token" }
+    },
+    QueryParameters = new Dictionary<string, string>
+    {
+        { "param1", "value1" },
+        { "param2", "value2" }
+    }
+};
+
+// Validate the URL
+bool isValidUrl = httpService.ValidateUrl(request.Url);
+Console.WriteLine($"Is URL valid? {isValidUrl}");
+
+// Send the request
+var response = await httpService.SendRequestAsync(request);
+Console.WriteLine($"Status Code: {response.StatusCode}");
+Console.WriteLine($"Response Body: {response.Body}");

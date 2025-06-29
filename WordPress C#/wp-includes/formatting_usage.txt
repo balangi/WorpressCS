@@ -1,0 +1,18 @@
+var context = new ApplicationDbContext();
+var formattingService = new FormattingService(context);
+
+// Format text
+string formattedText = formattingService.FormatText("Hello, this is a test -- with smart quotes!");
+Console.WriteLine(formattedText);
+
+// Validate email
+var emailResult = formattingService.ValidateEmail("example@example.com");
+Console.WriteLine($"Email: {emailResult.Email}, IsValid: {emailResult.IsValid}, Reason: {emailResult.Reason}");
+
+// Add leading zeros
+string paddedNumber = formattingService.AddLeadingZeros(10, 4);
+Console.WriteLine(paddedNumber);
+
+// Calculate time difference
+string timeDifference = formattingService.GetTimeDifference(new DateTime(2023, 1, 1));
+Console.WriteLine(timeDifference);
