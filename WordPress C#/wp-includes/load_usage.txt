@@ -1,0 +1,22 @@
+var context = new ApplicationDbContext();
+var loadService = new LoadService(context);
+
+// Fix server variables
+var httpContextAccessor = new HttpContextAccessor();
+var httpRequest = httpContextAccessor.HttpContext.Request;
+loadService.FixServerVariables(httpRequest);
+
+// Validate PHP version and extensions
+try
+{
+    var currentPhpVersion = "8.1.0";
+    var requiredPhpVersion = "7.4.0";
+    var requiredExtensions = new List<string> { "curl", "mbstring", "json" };
+
+    loadService.ValidatePhpVersion(currentPhpVersion, requiredPhpVersion, requiredExtensions);
+    Console.WriteLine("PHP version and extensions are valid.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}

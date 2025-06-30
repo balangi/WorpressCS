@@ -1,0 +1,15 @@
+public class LocalizationController
+{
+    private readonly TranslationService _translationService;
+
+    public LocalizationController(TranslationService translationService)
+    {
+        _translationService = translationService;
+    }
+
+    public void DisplayTranslatedText(string textDomain, string originalText)
+    {
+        var translatedText = _translationService.Translate(textDomain, originalText);
+        Console.WriteLine(translatedText);
+    }
+}

@@ -1,0 +1,29 @@
+var context = new ApplicationDbContext();
+var mediaService = new MediaService(context);
+
+// Upload a media file
+var fileMock = new FormFile(null, 0, 0, "file", "example.mp3")
+{
+    Headers = new HeaderDictionary(),
+    ContentType = "audio/mpeg"
+};
+var uploadedMedia = mediaService.UploadMedia(fileMock, 1);
+Console.WriteLine($"Uploaded Media: {uploadedMedia.FileUrl}");
+
+// Retrieve media attachments for a post
+var attachments = mediaService.GetAttachedMedia(1, "audio/mpeg");
+foreach (var attachment in attachments)
+{
+    Console.WriteLine($"Attachment: {attachment.FileName}, Size: {attachment.FileSize}");
+}
+
+// Create a playlist
+var playlist = mediaService.CreatePlaylist("audio", "light", new List<int> { 1, 2, 3 });
+Console.WriteLine($"Playlist Created: {playlist.Tracks.Count} tracks");
+
+// Search for media
+var searchResults = mediaService.SearchMedia("example");
+foreach (var result in searchResults)
+{
+    Console.WriteLine($"Search Result: {result.FileName}");
+}

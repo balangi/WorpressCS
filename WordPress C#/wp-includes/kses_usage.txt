@@ -1,0 +1,41 @@
+var ksesSettings = new KsesSettings
+{
+    AllowedTags = new List<AllowedHtmlTag>
+    {
+        new AllowedHtmlTag
+        {
+            TagName = "a",
+            Attributes = new Dictionary<string, bool>
+            {
+                { "href", true },
+                { "title", true }
+            }
+        },
+        new AllowedHtmlTag
+        {
+            TagName = "img",
+            Attributes = new Dictionary<string, bool>
+            {
+                { "src", true },
+                { "alt", true }
+            }
+        }
+    },
+    AllowedProtocols = new List<string> { "http", "https", "ftp" },
+    AllowedEntities = new List<string> { "nbsp", "lt", "gt", "amp" }
+};
+
+var ksesService = new KsesService(ksesSettings);
+
+// Filter content
+string unsafeContent = "<script>alert('XSS');</script><a href='https://example.com '>Link</a><img src='image.jpg' alt='Image'>";
+string safeContent = ksesService.FilterContent(unsafeContent);
+Console.WriteLine(safeContent);
+
+// Normalize entities
+string normalizedContent = ksesService.NormalizeEntities("< > &nbsp;");
+Console.WriteLine(normalizedContent);
+
+// Decode entities
+string decodedContent = ksesService.DecodeEntities("&#65; &#x41;");
+Console.WriteLine(decodedContent);

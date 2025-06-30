@@ -1,0 +1,31 @@
+var context = new ApplicationDbContext();
+var metaService = new MetaService(context);
+
+// Add metadata
+metaService.AddMetaData("post", 1, "author", "John Doe");
+metaService.AddMetaData("post", 1, "tags", "C#, EF Core, LINQ");
+
+// Retrieve metadata
+var metadata = metaService.GetMetaData("post", 1);
+foreach (var data in metadata)
+{
+    Console.WriteLine($"Key: {data.MetaKey}, Value: {data.MetaValue}");
+}
+
+// Check if metadata exists
+bool hasAuthor = metaService.HasMetaData("post", 1, "author");
+Console.WriteLine($"Has author metadata: {hasAuthor}");
+
+// Update metadata
+var authorMetadata = metaService.GetMetaData("post", 1, "author").FirstOrDefault();
+if (authorMetadata != null)
+{
+    metaService.UpdateMetaData(authorMetadata.Id, "Jane Doe");
+}
+
+// Delete metadata
+var tagsMetadata = metaService.GetMetaData("post", 1, "tags").FirstOrDefault();
+if (tagsMetadata != null)
+{
+    metaService.DeleteMetaData(tagsMetadata.Id);
+}

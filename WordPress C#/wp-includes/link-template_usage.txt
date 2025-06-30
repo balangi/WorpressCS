@@ -1,0 +1,22 @@
+var context = new ApplicationDbContext();
+var linkTemplateService = new LinkTemplateService(context);
+
+// Get post permalink
+string permalink = linkTemplateService.GetPostPermalink(1);
+Console.WriteLine(permalink);
+
+// Get shortlink
+string shortLink = linkTemplateService.GetShortLink(1, "Click here");
+Console.WriteLine(shortLink);
+
+// Get category feed link
+string categoryFeedLink = linkTemplateService.GetCategoryFeedLink(5, "rss2");
+Console.WriteLine(categoryFeedLink);
+
+// Get user edit link
+string userEditLink = linkTemplateService.GetUserEditLink(10);
+Console.WriteLine(userEditLink);
+
+// Get previous comments link
+string previousCommentsLink = linkTemplateService.GetPreviousCommentsLink(3);
+Console.WriteLine(previousCommentsLink);

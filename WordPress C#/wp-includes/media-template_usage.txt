@@ -1,0 +1,42 @@
+var context = new ApplicationDbContext();
+var mediaTemplateService = new MediaTemplateService(context);
+
+// Generate an audio template
+var audioModel = new Dictionary<string, string>
+{
+    { "mp3", "/path/to/audio.mp3" },
+    { "ogg", "/path/to/audio.ogg" }
+};
+var audioTemplate = mediaTemplateService.GenerateAudioTemplate(new List<string> { "mp3", "ogg" }, audioModel);
+Console.WriteLine(audioTemplate);
+
+// Generate a video template
+var videoModel = new Dictionary<string, string>
+{
+    { "mp4", "/path/to/video.mp4" },
+    { "webm", "/path/to/video.webm" },
+    { "poster", "/path/to/poster.jpg" }
+};
+var videoTemplate = mediaTemplateService.GenerateVideoTemplate(new List<string> { "mp4", "webm" }, videoModel);
+Console.WriteLine(videoTemplate);
+
+// Generate a playlist template
+var playlist = new Playlist
+{
+    Type = "audio",
+    Style = "light",
+    Tracks = new List<Track>
+    {
+        new Track { Src = "/path/to/track1.mp3", Title = "Track 1", Thumbnail = "/path/to/thumbnail1.jpg" },
+        new Track { Src = "/path/to/track2.mp3", Title = "Track 2", Thumbnail = "/path/to/thumbnail2.jpg" }
+    }
+};
+var playlistTemplate = mediaTemplateService.GeneratePlaylistTemplate(playlist);
+Console.WriteLine(playlistTemplate);
+
+// Retrieve media attachments
+var mediaAttachments = mediaTemplateService.GetMediaAttachments("audio/mpeg");
+foreach (var attachment in mediaAttachments)
+{
+    Console.WriteLine($"File: {attachment.FileName}, URL: {attachment.FileUrl}");
+}
