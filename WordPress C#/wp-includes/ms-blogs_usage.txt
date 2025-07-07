@@ -1,0 +1,22 @@
+var context = new ApplicationDbContext();
+var msBlogsService = new MsBlogsService(context);
+
+// Update site date
+msBlogsService.UpdateSiteDate(1);
+
+// Get site URL by ID
+string siteUrl = msBlogsService.GetSiteUrlById(1);
+Console.WriteLine($"Site URL: {siteUrl}");
+
+// Get recently updated sites
+var recentSites = msBlogsService.GetRecentlyUpdatedSites(0, 5);
+foreach (var site in recentSites)
+{
+    Console.WriteLine($"Site: {site.Domain}, Last Updated: {site.LastUpdated}");
+}
+
+// Add site option
+msBlogsService.AddSiteOption(1, "theme", "default");
+
+// Delete site option
+msBlogsService.DeleteSiteOption(1, "theme");

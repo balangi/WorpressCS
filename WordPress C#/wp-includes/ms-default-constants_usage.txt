@@ -1,0 +1,14 @@
+var context = new ApplicationDbContext();
+var msDefaultConstantsService = new MsDefaultConstantsService(context);
+
+// Define upload constants
+msDefaultConstantsService.DefineUploadConstants();
+
+// Define cookie constants
+msDefaultConstantsService.DefineCookieConstants();
+
+// Define file constants
+msDefaultConstantsService.DefineFileConstants();
+
+// Define subdomain constants
+msDefaultConstantsService.DefineSubdomainConstants();

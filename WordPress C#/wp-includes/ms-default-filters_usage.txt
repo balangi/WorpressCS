@@ -1,0 +1,7 @@
+var serviceProvider = new ServiceCollection()
+    .AddScoped<ApplicationDbContext>()
+    .AddScoped<MsDefaultFiltersService>()
+    .BuildServiceProvider();
+
+var msDefaultFiltersService = serviceProvider.GetService<MsDefaultFiltersService>();
+msDefaultFiltersService.SetupDefaultFilters();

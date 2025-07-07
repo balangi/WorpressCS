@@ -1,0 +1,26 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<MsDeprecatedService>();
+
+var msDeprecatedService = new MsDeprecatedService(context, logger);
+
+// Example usage of deprecated functions
+try
+{
+    var dashboardBlog = msDeprecatedService.GetDashboardBlog();
+    Console.WriteLine($"Dashboard Blog ID: {dashboardBlog.BlogId}");
+
+    var randomPassword = msDeprecatedService.GenerateRandomPassword(12);
+    Console.WriteLine($"Generated Password: {randomPassword}");
+
+    msDeprecatedService.GracefulFail("An example error occurred.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Exception: {ex.Message}");
+}
