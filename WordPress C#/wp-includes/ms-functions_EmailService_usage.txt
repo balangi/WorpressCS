@@ -1,0 +1,2 @@
+var emailService = new EmailService();
+emailService.SendWelcomeEmail("user@example.com", "JohnDoe", "http://example.com/activate");

@@ -1,0 +1,2 @@
+var registrationService = new RegistrationService(context);
+bool canRegister = registrationService.CanUsersRegister();

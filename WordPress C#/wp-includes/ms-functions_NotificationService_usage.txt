@@ -1,0 +1,3 @@
+var notificationService = new NotificationService(context);
+notificationService.NotifyAdminAboutNewSite(1);
+notificationService.NotifyAdminAboutNewUser(1);

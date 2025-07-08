@@ -1,0 +1,2 @@
+var userService = new UserService();
+bool isValid = userService.IsUsernameValid("admin");

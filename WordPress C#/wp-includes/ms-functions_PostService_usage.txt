@@ -1,0 +1,2 @@
+var postService = new PostService(context);
+postService.UpdatePostCount(1);

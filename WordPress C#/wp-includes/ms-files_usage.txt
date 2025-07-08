@@ -1,0 +1,19 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<MsFilesService>();
+
+var msFilesService = new MsFilesService(context, logger);
+
+// Simulate handling a file request
+var httpContext = new DefaultHttpContext();
+httpContext.Request.Query = new QueryCollection(new Dictionary<string, StringValues>
+{
+    { "file", "example.jpg" }
+});
+
+msFilesService.HandleFileRequest(httpContext);
