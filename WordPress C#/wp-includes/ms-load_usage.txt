@@ -1,0 +1,22 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<MsLoadService>();
+
+var msLoadService = new MsLoadService(context, logger);
+
+// Example usage
+var (currentNetwork, currentSite) = msLoadService.LoadCurrentNetworkAndSite("example.com", "/blog");
+if (currentNetwork != null && currentSite != null)
+{
+    Console.WriteLine($"Loaded Network: {currentNetwork.Domain}, Site: {currentSite.Domain}");
+}
+
+if (!msLoadService.CheckSiteStatus(currentSite))
+{
+    Console.WriteLine("Site is not active.");
+}

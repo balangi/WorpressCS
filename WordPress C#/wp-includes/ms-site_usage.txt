@@ -1,0 +1,36 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<MsSiteService>();
+
+var msSiteService = new MsSiteService(context, logger);
+
+// Insert a new site
+var newSite = new Site
+{
+    BlogId = 1,
+    Domain = "example.com",
+    Path = "/blog",
+    Public = true,
+    Archived = false,
+    Mature = false,
+    Spam = false,
+    Deleted = false,
+    NetworkId = 1,
+    LastUpdated = DateTime.UtcNow
+};
+msSiteService.InsertSite(newSite);
+
+// Update a site
+newSite.Public = false;
+msSiteService.UpdateSite(newSite);
+
+// Add metadata to a site
+msSiteService.UpdateSiteMeta(1, "custom_key", "custom_value");
+
+// Delete a site
+msSiteService.DeleteSite(1);

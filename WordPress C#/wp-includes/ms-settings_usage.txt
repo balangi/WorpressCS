@@ -1,0 +1,20 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddMemoryCache()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var cache = serviceProvider.GetService<IMemoryCache>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<MsSettingsService>();
+
+var msSettingsService = new MsSettingsService(context, cache, logger);
+
+// Simulate initializing the current network and site
+var httpContext = new DefaultHttpContext();
+httpContext.Request.Scheme = "https";
+httpContext.Request.Host = new HostString("example.com");
+httpContext.Request.Path = "/blog";
+
+msSettingsService.InitializeCurrentNetworkAndSite(httpContext);

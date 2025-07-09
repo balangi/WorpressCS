@@ -1,0 +1,29 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddMemoryCache()
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var cache = serviceProvider.GetService<IMemoryCache>();
+
+var msNetworkService = new MsNetworkService(context, cache);
+
+// Retrieve a specific network
+var network = msNetworkService.GetNetwork(1);
+Console.WriteLine($"Network Domain: {network?.Domain}");
+
+// Retrieve all networks
+var networks = msNetworkService.GetNetworks(new Dictionary<string, object>
+{
+    { "domain", "example.com" }
+});
+foreach (var net in networks)
+{
+    Console.WriteLine($"Network ID: {net.Id}, Domain: {net.Domain}");
+}
+
+// Clean network cache
+msNetworkService.CleanNetworkCache(new List<int> { 1, 2 });
+
+// Prime network cache
+msNetworkService.PrimeNetworkCache(new List<int> { 1, 2, 3 });
