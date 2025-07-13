@@ -1,0 +1,30 @@
+var serviceProvider = new ServiceCollection()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<PluginService>();
+
+var pluginService = new PluginService(logger);
+
+// Add an action hook
+pluginService.AddAction("before_save", (Action)(() =>
+{
+    Console.WriteLine("Executing before_save action.");
+}));
+
+// Execute the action hook
+pluginService.DoAction("before_save");
+
+// Add a filter hook
+pluginService.AddFilter("format_text", (Func<string, string>)(text =>
+{
+    return text.ToUpper();
+}));
+
+// Apply the filter
+var formattedText = pluginService.ApplyFilters("format_text", "hello world");
+Console.WriteLine(formattedText); // Output: "HELLO WORLD"
+
+// Remove a callback
+pluginService.RemoveCallback("before_save", "callback_id_here");

@@ -1,0 +1,24 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddMemoryCache()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var cache = serviceProvider.GetService<IMemoryCache>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<OptionService>();
+
+var optionService = new OptionService(context, cache, logger);
+
+// Retrieve an option
+var siteName = optionService.GetOption("site_name", "Default Site");
+
+// Update an option
+optionService.UpdateOption("site_name", "New Site Name");
+
+// Delete an option
+optionService.DeleteOption("site_name");
+
+// Prime autoload options
+optionService.PrimeAutoloadOptions();

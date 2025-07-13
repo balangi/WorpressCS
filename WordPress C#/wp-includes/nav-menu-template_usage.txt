@@ -1,0 +1,20 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<NavMenuTemplateService>();
+
+var navMenuTemplateService = new NavMenuTemplateService(context, logger);
+
+// Display a navigation menu
+var menuHtml = navMenuTemplateService.DisplayNavMenu(1, new NavMenuArgs
+{
+    Container = "nav",
+    ContainerClass = "main-menu",
+    ContainerId = "primary-menu"
+});
+
+Console.WriteLine(menuHtml);

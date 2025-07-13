@@ -1,0 +1,36 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<PluggableService>();
+
+var pluggableService = new PluggableService(context, logger);
+
+// Send an email
+bool emailSent = pluggableService.SendEmail(
+    "recipient@example.com",
+    "Test Subject",
+    "This is a test email.",
+    "Custom-Header: Value",
+    new List<string> { "path/to/attachment.pdf" }
+);
+
+if (emailSent)
+{
+    Console.WriteLine("Email sent successfully.");
+}
+else
+{
+    Console.WriteLine("Failed to send email.");
+}
+
+// Authenticate a user
+bool isAuthenticated = pluggableService.AuthenticateUser("username", "password");
+Console.WriteLine(isAuthenticated ? "User authenticated." : "Authentication failed.");
+
+// Create a new user
+pluggableService.CreateUser("newuser", "newuser@example.com", "securepassword");
+Console.WriteLine("User created successfully.");

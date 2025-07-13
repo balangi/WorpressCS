@@ -1,0 +1,25 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<NavMenuService>();
+
+var navMenuService = new NavMenuService(context, logger);
+
+// Create a new menu
+var newMenu = navMenuService.CreateNavMenu("Main Menu");
+
+// Add a menu item
+var menuItem = navMenuService.AddMenuItem(newMenu.Id, "Home", "/", "post_type", 1);
+
+// Update a menu item
+navMenuService.UpdateMenuItem(menuItem.Id, "Homepage", "/home");
+
+// Retrieve all menus
+var allMenus = navMenuService.GetAllNavMenus();
+
+// Delete a menu
+navMenuService.DeleteNavMenu(newMenu.Id);
