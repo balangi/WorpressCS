@@ -1,0 +1,41 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<RestApiService>();
+
+var restApiService = new RestApiService(context, logger);
+
+// Register REST API routes
+restApiService.RegisterRestRoutes();
+
+// Handle a GET request
+var getRequest = restApiService.HandleRestRequest("/posts", "GET", new Dictionary<string, string>());
+Console.WriteLine($"GET Response: {getRequest.Data}");
+
+// Handle a POST request
+var postRequest = restApiService.HandleRestRequest("/posts", "POST", new Dictionary<string, string>
+{
+    { "title", "New Post" },
+    { "content", "This is a new post." }
+});
+Console.WriteLine($"POST Response: {postRequest.Data}");
+
+// Handle a PUT request
+var putRequest = restApiService.HandleRestRequest("/posts", "PUT", new Dictionary<string, string>
+{
+    { "id", "1" },
+    { "title", "Updated Post" },
+    { "content", "This post has been updated." }
+});
+Console.WriteLine($"PUT Response: {putRequest.Data}");
+
+// Handle a DELETE request
+var deleteRequest = restApiService.HandleRestRequest("/posts", "DELETE", new Dictionary<string, string>
+{
+    { "id", "1" }
+});
+Console.WriteLine($"DELETE Response: {deleteRequest.Data}");

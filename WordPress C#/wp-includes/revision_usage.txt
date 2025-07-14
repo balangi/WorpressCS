@@ -1,0 +1,33 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<RevisionService>();
+
+var revisionService = new RevisionService(context, logger);
+
+// Retrieve revisions for a post
+var revisions = revisionService.GetRevisions(1);
+foreach (var revision in revisions)
+{
+    Console.WriteLine($"Revision ID: {revision.Id}, Title: {revision.Title}, Modified: {revision.Modified}");
+}
+
+// Create a new revision
+var newRevision = revisionService.CreateRevision(1, "Updated Title", "Updated Content");
+Console.WriteLine($"New Revision Created. ID: {newRevision.Id}");
+
+// Restore a post to a specific revision
+bool restored = revisionService.RestoreRevision(1);
+Console.WriteLine(restored ? "Post restored successfully." : "Failed to restore post.");
+
+// Delete a revision
+bool deleted = revisionService.DeleteRevision(1);
+Console.WriteLine(deleted ? "Revision deleted successfully." : "Failed to delete revision.");
+
+// Check if a revision is an autosave
+bool isAutosave = revisionService.IsAutosave(1);
+Console.WriteLine(isAutosave ? "This revision is an autosave." : "This revision is not an autosave.");

@@ -1,0 +1,36 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<PostFormatService>();
+
+var postFormatService = new PostFormatService(context, logger);
+
+// Retrieve the format of a post
+var format = postFormatService.GetPostFormat(1);
+Console.WriteLine($"Post Format: {format}");
+
+// Check if a post has a specific format
+bool hasFormat = postFormatService.HasPostFormat(new List<string> { "gallery", "video" }, 1);
+Console.WriteLine(hasFormat ? "Post has the specified format." : "Post does not have the specified format.");
+
+// Assign a format to a post
+postFormatService.SetPostFormat(1, "gallery");
+
+// Retrieve all post formats
+var formats = postFormatService.GetPostFormatStrings();
+foreach (var formatPair in formats)
+{
+    Console.WriteLine($"{formatPair.Key}: {formatPair.Value}");
+}
+
+// Retrieve the display name of a format
+var formatName = postFormatService.GetPostFormatString("gallery");
+Console.WriteLine($"Display Name: {formatName}");
+
+// Retrieve the link to a post format
+var formatLink = postFormatService.GetPostFormatLink("gallery");
+Console.WriteLine($"Format Link: {formatLink}");

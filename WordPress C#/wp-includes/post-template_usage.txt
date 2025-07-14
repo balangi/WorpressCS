@@ -1,0 +1,26 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<PostTemplateService>();
+
+var postTemplateService = new PostTemplateService(context, logger);
+
+// Retrieve the excerpt of a post
+var excerpt = postTemplateService.GetPostExcerpt(1);
+Console.WriteLine($"Post Excerpt: {excerpt}");
+
+// Get post classes
+var postClasses = postTemplateService.GetPostClasses(1, new List<string> { "custom-class" });
+Console.WriteLine($"Post Classes: {string.Join(", ", postClasses)}");
+
+// Check if a post has a custom excerpt
+bool hasExcerpt = postTemplateService.HasCustomExcerpt(1);
+Console.WriteLine(hasExcerpt ? "Post has a custom excerpt." : "Post does not have a custom excerpt.");
+
+// Render post content using a template
+var renderedContent = postTemplateService.RenderPostContent(1);
+Console.WriteLine($"Rendered Content: {renderedContent}");

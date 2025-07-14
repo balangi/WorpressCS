@@ -1,0 +1,28 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<PostThumbnailService>();
+
+var postThumbnailService = new PostThumbnailService(context, logger);
+
+// Check if a post has a thumbnail
+bool hasThumbnail = postThumbnailService.HasThumbnail(1);
+Console.WriteLine(hasThumbnail ? "Post has a thumbnail." : "Post does not have a thumbnail.");
+
+// Retrieve the thumbnail URL
+var thumbnailUrl = postThumbnailService.GetThumbnailUrl(1);
+Console.WriteLine($"Thumbnail URL: {thumbnailUrl}");
+
+// Set a thumbnail for a post
+postThumbnailService.SetThumbnail(1, 2);
+
+// Remove the thumbnail from a post
+postThumbnailService.RemoveThumbnail(1);
+
+// Check if thumbnails are supported for a post type
+bool isSupported = postThumbnailService.IsThumbnailSupported("post");
+Console.WriteLine(isSupported ? "Thumbnails are supported." : "Thumbnails are not supported.");

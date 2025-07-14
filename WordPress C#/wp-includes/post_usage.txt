@@ -1,0 +1,46 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<PostService>();
+
+var postService = new PostService(context, logger);
+
+// Create a new post
+var newPost = new Post
+{
+    Title = "Sample Post",
+    Content = "This is a sample post.",
+    Status = "publish",
+    Type = "post",
+    AuthorId = "1"
+};
+postService.CreatePost(newPost);
+
+// Retrieve posts
+var posts = postService.GetPosts(postType: "post", status: "publish");
+foreach (var post in posts)
+{
+    Console.WriteLine($"Post Title: {post.Title}");
+}
+
+// Update a post
+var updatedPost = new Post { Title = "Updated Title" };
+postService.UpdatePost(1, updatedPost);
+
+// Delete a post
+postService.DeletePost(1);
+
+// Register a new post type
+var postType = new PostType
+{
+    Name = "custom_post",
+    SingularName = "Custom Post",
+    Public = true,
+    Hierarchical = false,
+    Supports = new List<string> { "title", "editor" }
+};
+postService.RegisterPostType(postType);

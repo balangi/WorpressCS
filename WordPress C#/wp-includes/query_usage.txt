@@ -1,0 +1,49 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<QueryService>();
+
+var queryService = new QueryService(context, logger);
+
+// Retrieve posts with filters
+var posts = queryService.GetPosts(postType: "post", status: "publish");
+foreach (var post in posts)
+{
+    Console.WriteLine($"Post Title: {post.Title}");
+}
+
+// Retrieve a single post by ID
+var singlePost = queryService.GetPostById(1);
+Console.WriteLine($"Single Post Title: {singlePost?.Title}");
+
+// Retrieve posts by author
+var authorPosts = queryService.GetPostsByAuthor("1");
+foreach (var post in authorPosts)
+{
+    Console.WriteLine($"Author Post Title: {post.Title}");
+}
+
+// Retrieve posts by date range
+var dateRangePosts = queryService.GetPostsByDateRange(new DateTime(2023, 1, 1), new DateTime(2023, 12, 31));
+foreach (var post in dateRangePosts)
+{
+    Console.WriteLine($"Date Range Post Title: {post.Title}");
+}
+
+// Search for posts
+var searchResults = queryService.SearchPosts("sample");
+foreach (var post in searchResults)
+{
+    Console.WriteLine($"Search Result Title: {post.Title}");
+}
+
+// Paginate posts
+var paginatedPosts = queryService.PaginatePosts(1, 5);
+foreach (var post in paginatedPosts)
+{
+    Console.WriteLine($"Paginated Post Title: {post.Title}");
+}
