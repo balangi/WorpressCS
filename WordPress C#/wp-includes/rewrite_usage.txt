@@ -1,0 +1,33 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<RewriteService>();
+
+var rewriteService = new RewriteService(context, logger);
+
+// Add a rewrite rule
+rewriteService.AddRewriteRule("^post/([0-9]+)/?$", "index.php?post_id=$1");
+
+// Retrieve all rewrite rules
+var rules = rewriteService.GetRewriteRules();
+foreach (var rule in rules)
+{
+    Console.WriteLine($"Rule: {rule.RegexPattern} -> {rule.Query}");
+}
+
+// Add an endpoint
+rewriteService.AddEndpoint("json", "EP_PERMALINK|EP_PAGES");
+
+// Remove an endpoint
+bool removed = rewriteService.RemoveEndpoint("json");
+Console.WriteLine(removed ? "Endpoint removed successfully." : "Failed to remove endpoint.");
+
+// Add a permalink structure
+rewriteService.AddPermastruct("post", "/%year%/%monthnum%/%postname%/");
+
+// Flush rewrite rules
+rewriteService.FlushRewriteRules();

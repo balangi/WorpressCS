@@ -1,0 +1,25 @@
+var serviceProvider = new ServiceCollection()
+    .AddMemoryCache()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var cache = serviceProvider.GetService<IMemoryCache>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<RssService>();
+
+var rssService = new RssService(cache, logger);
+
+// Fetch an RSS feed
+try
+{
+    var feed = rssService.FetchRssFeed("https://example.com/rss-feed ");
+    Console.WriteLine($"Feed Title: {feed.Title}");
+
+    // Display RSS items as HTML
+    var htmlOutput = rssService.DisplayRssItems(feed, 5);
+    Console.WriteLine(htmlOutput);
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}

@@ -1,0 +1,25 @@
+var serviceProvider = new ServiceCollection()
+    .AddLogging(logging => logging.AddConsole())
+    .AddHttpContextAccessor()
+    .BuildServiceProvider();
+
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<ScriptLoaderService>();
+var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+
+var scriptLoaderService = new ScriptLoaderService(logger, httpContextAccessor);
+
+// Add scripts
+scriptLoaderService.AddScript("jquery", "/js/jquery.js", version: "3.7.1");
+scriptLoaderService.AddScript("utils", "/js/utils.js", dependencies: new List<string> { "jquery" }, version: "1.0.0");
+
+// Add localization data
+scriptLoaderService.LocalizeScript("utils", "ajaxUrl", "/admin-ajax.php");
+
+// Print scripts in the head
+var headScripts = scriptLoaderService.PrintScripts(isFooter: false);
+Console.WriteLine(headScripts);
+
+// Print inline localization data
+var localizationData = scriptLoaderService.PrintInlineLocalization("utils");
+Console.WriteLine(localizationData);

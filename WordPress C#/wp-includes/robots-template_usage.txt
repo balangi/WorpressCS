@@ -1,0 +1,30 @@
+var serviceProvider = new ServiceCollection()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<RobotsService>();
+
+var robotsService = new RobotsService(logger);
+
+// Example usage
+var robotsDirectives = new Dictionary<string, string>();
+
+// Add noindex based on site configuration
+robotsDirectives = robotsService.AddNoIndexIfRequired(robotsDirectives, isPublic: false);
+
+// Add noindex for embeds
+robotsDirectives = robotsService.AddNoIndexForEmbeds(robotsDirectives, isEmbed: true);
+
+// Add noindex for search pages
+robotsDirectives = robotsService.AddNoIndexForSearch(robotsDirectives, isSearch: true);
+
+// Add directives for sensitive pages
+robotsDirectives = robotsService.AddSensitivePageDirectives(robotsDirectives);
+
+// Add max-image-preview directive
+robotsDirectives = robotsService.AddMaxImagePreviewLarge(robotsDirectives, isPublic: true);
+
+// Render the robots meta tag
+var robotsMetaTag = robotsService.RenderRobotsMetaTag(robotsDirectives);
+Console.WriteLine(robotsMetaTag);

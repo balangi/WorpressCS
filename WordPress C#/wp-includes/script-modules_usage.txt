@@ -1,0 +1,31 @@
+var serviceProvider = new ServiceCollection()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<ScriptModuleService>();
+
+var scriptModuleService = new ScriptModuleService(logger);
+
+// Register a script module
+scriptModuleService.RegisterScriptModule(
+    "@wordpress/example",
+    "/path/to/example.js",
+    new List<Dependency>
+    {
+        new Dependency { Id = "@wordpress/dependency1", ImportType = "static" }
+    },
+    "1.0.0"
+);
+
+// Enqueue a script module
+scriptModuleService.EnqueueScriptModule("@wordpress/example");
+
+// Dequeue a script module
+scriptModuleService.DequeueScriptModule("@wordpress/example");
+
+// Deregister a script module
+scriptModuleService.DeregisterScriptModule("@wordpress/example");
+
+// Register default script modules
+scriptModuleService.RegisterDefaultScriptModules(AppContext.BaseDirectory);
