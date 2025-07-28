@@ -1,0 +1,12 @@
+var serviceProvider = new ServiceCollection()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<SpeculativeLoadingService>();
+
+var speculativeLoadingService = new SpeculativeLoadingService(logger);
+
+// Get and print speculation rules
+var speculationRulesJson = speculativeLoadingService.PrintSpeculationRules();
+Console.WriteLine(speculationRulesJson);

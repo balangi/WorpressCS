@@ -1,0 +1,21 @@
+var serviceProvider = new ServiceCollection()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<ShortcodeService>();
+
+var shortcodeService = new ShortcodeService(logger);
+
+// Add a shortcode
+shortcodeService.AddShortcode("example", (attributes, content) =>
+{
+    var name = attributes.ContainsKey("name") ? attributes["name"] : "Default";
+    return $"<div class='example'>Hello, {name}! {content}</div>";
+});
+
+// Process content with shortcodes
+var content = "[example name=\"John\"]This is a test.[/example]";
+var processedContent = shortcodeService.ProcessShortcodes(content);
+
+Console.WriteLine(processedContent);

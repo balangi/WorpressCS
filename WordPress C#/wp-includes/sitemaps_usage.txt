@@ -1,0 +1,35 @@
+var serviceProvider = new ServiceCollection()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<SitemapService>();
+
+var sitemapService = new SitemapService(logger);
+
+// Register a new sitemap provider
+var customProvider = new SitemapProvider
+{
+    Name = "custom",
+    GetSitemapUrl = (subtype, page) => $"/sitemap-custom-{subtype}-{page}.xml",
+    ObjectSubtypes = new Dictionary<string, object>
+    {
+        { "product", new { Type = "product" } }
+    }
+};
+sitemapService.RegisterSitemapProvider("custom", customProvider);
+
+// Get all sitemap providers
+var providers = sitemapService.GetSitemapProviders();
+foreach (var provider in providers)
+{
+    Console.WriteLine($"Provider: {provider.Key}");
+}
+
+// Get the maximum number of URLs for a sitemap
+int maxUrls = sitemapService.GetMaxUrls("post");
+Console.WriteLine($"Max URLs for 'post': {maxUrls}");
+
+// Retrieve a sitemap URL
+string url = sitemapService.GetSitemapUrl("posts", "post", 1);
+Console.WriteLine($"Sitemap URL: {url}");

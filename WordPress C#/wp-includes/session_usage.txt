@@ -1,0 +1,31 @@
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ApplicationDbContext>()
+    .AddLogging(logging => logging.AddConsole())
+    .BuildServiceProvider();
+
+var context = serviceProvider.GetService<ApplicationDbContext>();
+var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<SessionService>();
+
+var sessionService = new SessionService(context, logger);
+
+// Create a new session token
+var newToken = sessionService.CreateSessionToken("user1", DateTime.UtcNow.AddDays(7));
+Console.WriteLine($"New Session Token: {newToken.Token}");
+
+// Retrieve a session token
+var retrievedToken = sessionService.GetSessionToken(newToken.Token);
+Console.WriteLine($"Retrieved Token: {retrievedToken?.Token}");
+
+// Invalidate a session token
+sessionService.InvalidateSessionToken(newToken.Token);
+
+// Retrieve all active session tokens for a user
+var userTokens = sessionService.GetUserSessionTokens("user1");
+foreach (var token in userTokens)
+{
+    Console.WriteLine($"Active Token: {token.Token}");
+}
+
+// Invalidate all session tokens for a user
+sessionService.InvalidateAllUserSessionTokens("user1");
